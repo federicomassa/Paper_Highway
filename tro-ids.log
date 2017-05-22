@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.4.19)  22 MAY 2017 14:44
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.4.19)  22 MAY 2017 16:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1161,239 +1161,376 @@ LaTeX Font Warning: Command \small invalid in math mode on input line 196.
 LaTeX Font Warning: Command \small invalid in math mode on input line 196.
 
 
+LaTeX Font Warning: Command \small invalid in math mode on input line 198.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 198.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 198.
+
+
 LaTeX Font Warning: Command \small invalid in math mode on input line 201.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 215.
+LaTeX Font Warning: Command \small invalid in math mode on input line 201.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 215.
+LaTeX Font Warning: Command \small invalid in math mode on input line 204.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 215.
+LaTeX Font Warning: Command \small invalid in math mode on input line 204.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 206.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 206.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 209.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 209.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 212.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 212.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 214.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 214.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 217.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 217.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 220.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 220.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 222.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 222.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 222.
 
 
 LaTeX Font Warning: Command \small invalid in math mode on input line 224.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 237.
+LaTeX Font Warning: Command \small invalid in math mode on input line 224.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 237.
+LaTeX Font Warning: Command \small invalid in math mode on input line 226.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 240.
+LaTeX Font Warning: Command \small invalid in math mode on input line 226.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 248.
+LaTeX Font Warning: Command \small invalid in math mode on input line 230.
 
 
-LaTeX Warning: Citation `thrun2002pr' on page 15 undefined on input line 259.
+LaTeX Font Warning: Command \small invalid in math mode on input line 244.
 
 
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `!tbp') on input line 261.
-
-<images/example_01.pdf, id=747, 355.3275pt x 100.375pt>
-File: images/example_01.pdf Graphic file (type pdf)
-
-<use images/example_01.pdf>
-Package pdftex.def Info: images/example_01.pdf used on input line 263.
-(pdftex.def)             Requested size: 165.12378pt x 46.64632pt.
-
-<images/example_01_a.pdf, id=749, 355.3275pt x 100.375pt>
-File: images/example_01_a.pdf Graphic file (type pdf)
-
-<use images/example_01_a.pdf>
-Package pdftex.def Info: images/example_01_a.pdf used on input line 266.
-(pdftex.def)             Requested size: 165.12378pt x 46.64632pt.
-
-<images/example_01_b.pdf, id=751, 355.3275pt x 99.37125pt>
-File: images/example_01_b.pdf Graphic file (type pdf)
-
-<use images/example_01_b.pdf>
-Package pdftex.def Info: images/example_01_b.pdf used on input line 268.
-(pdftex.def)             Requested size: 165.12378pt x 46.17986pt.
+LaTeX Font Warning: Command \small invalid in math mode on input line 244.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 277.
+LaTeX Font Warning: Command \small invalid in math mode on input line 244.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 277.
+LaTeX Font Warning: Command \small invalid in math mode on input line 253.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 277.
-
-<images/simulation_01_F_a.pdf, id=755, 351.3125pt x 99.37125pt>
-File: images/simulation_01_F_a.pdf Graphic file (type pdf)
-
-<use images/simulation_01_F_a.pdf>
-Package pdftex.def Info: images/simulation_01_F_a.pdf used on input line 281.
-(pdftex.def)             Requested size: 242.52063pt x 68.6011pt.
-
-<images/simulation_01_A01_a.pdf, id=756, 351.3125pt x 100.375pt>
-File: images/simulation_01_A01_a.pdf Graphic file (type pdf)
-
-<use images/simulation_01_A01_a.pdf>
-Package pdftex.def Info: images/simulation_01_A01_a.pdf used on input line 284.
-
-(pdftex.def)             Requested size: 242.52063pt x 69.29404pt.
-
-<images/simulation_01_A02_a.pdf, id=757, 351.3125pt x 100.375pt>
-File: images/simulation_01_A02_a.pdf Graphic file (type pdf)
-
-<use images/simulation_01_A02_a.pdf>
-Package pdftex.def Info: images/simulation_01_A02_a.pdf used on input line 285.
-
-(pdftex.def)             Requested size: 242.52063pt x 69.29404pt.
-
-<images/simulation_01_A03_a.pdf, id=758, 351.3125pt x 100.375pt>
-File: images/simulation_01_A03_a.pdf Graphic file (type pdf)
-
-<use images/simulation_01_A03_a.pdf>
-Package pdftex.def Info: images/simulation_01_A03_a.pdf used on input line 286.
-
-(pdftex.def)             Requested size: 242.52063pt x 69.29404pt.
+LaTeX Font Warning: Command \small invalid in math mode on input line 261.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 288.
+LaTeX Warning: Command \textcircled invalid in math mode on input line 265.
+
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 265.
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/omsptm.fd
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 265.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 288.
+LaTeX Warning: Command \textcircled invalid in math mode on input line 265.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 266.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 266.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 267.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 267.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 268.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 268.
+
+
+Overfull \hbox (35.24658pt too wide) detected at line 272
+[]
+ []
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 276.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 276.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 276.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 279.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 287.
 
 [15]
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 293.
+LaTeX Warning: Command \textcircled invalid in math mode on input line 301.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 293.
+LaTeX Warning: Command \textcircled invalid in math mode on input line 302.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 303.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 304.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 310--311
+
+ []
+
+
+LaTeX Warning: Citation `thrun2002pr' on page 16 undefined on input line 312.
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `!tbp') on input line 295.
+               Default added (so using `!tbp') on input line 314.
 
-<images/simulation_02_F.pdf, id=765, 351.3125pt x 100.375pt>
+<images/example_01.pdf, id=751, 355.3275pt x 100.375pt>
+File: images/example_01.pdf Graphic file (type pdf)
+
+<use images/example_01.pdf>
+Package pdftex.def Info: images/example_01.pdf used on input line 316.
+(pdftex.def)             Requested size: 165.12378pt x 46.64632pt.
+
+<images/example_01_a.pdf, id=753, 355.3275pt x 100.375pt>
+File: images/example_01_a.pdf Graphic file (type pdf)
+
+<use images/example_01_a.pdf>
+Package pdftex.def Info: images/example_01_a.pdf used on input line 319.
+(pdftex.def)             Requested size: 165.12378pt x 46.64632pt.
+
+<images/example_01_b.pdf, id=755, 355.3275pt x 99.37125pt>
+File: images/example_01_b.pdf Graphic file (type pdf)
+
+<use images/example_01_b.pdf>
+Package pdftex.def Info: images/example_01_b.pdf used on input line 321.
+(pdftex.def)             Requested size: 165.12378pt x 46.17986pt.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 330.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 330.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 330.
+
+<images/simulation_01_F_a.pdf, id=759, 351.3125pt x 99.37125pt>
+File: images/simulation_01_F_a.pdf Graphic file (type pdf)
+
+<use images/simulation_01_F_a.pdf>
+Package pdftex.def Info: images/simulation_01_F_a.pdf used on input line 334.
+(pdftex.def)             Requested size: 242.52063pt x 68.6011pt.
+
+<images/simulation_01_A01_a.pdf, id=760, 351.3125pt x 100.375pt>
+File: images/simulation_01_A01_a.pdf Graphic file (type pdf)
+
+<use images/simulation_01_A01_a.pdf>
+Package pdftex.def Info: images/simulation_01_A01_a.pdf used on input line 337.
+
+(pdftex.def)             Requested size: 242.52063pt x 69.29404pt.
+
+<images/simulation_01_A02_a.pdf, id=761, 351.3125pt x 100.375pt>
+File: images/simulation_01_A02_a.pdf Graphic file (type pdf)
+
+<use images/simulation_01_A02_a.pdf>
+Package pdftex.def Info: images/simulation_01_A02_a.pdf used on input line 338.
+
+(pdftex.def)             Requested size: 242.52063pt x 69.29404pt.
+
+<images/simulation_01_A03_a.pdf, id=762, 351.3125pt x 100.375pt>
+File: images/simulation_01_A03_a.pdf Graphic file (type pdf)
+
+<use images/simulation_01_A03_a.pdf>
+Package pdftex.def Info: images/simulation_01_A03_a.pdf used on input line 339.
+
+(pdftex.def)             Requested size: 242.52063pt x 69.29404pt.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 341.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 341.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 346.
+
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 346.
+
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `!tbp') on input line 348.
+
+<images/simulation_02_F.pdf, id=764, 351.3125pt x 100.375pt>
 File: images/simulation_02_F.pdf Graphic file (type pdf)
 
 <use images/simulation_02_F.pdf>
-Package pdftex.def Info: images/simulation_02_F.pdf used on input line 297.
+Package pdftex.def Info: images/simulation_02_F.pdf used on input line 350.
 (pdftex.def)             Requested size: 242.52063pt x 69.29404pt.
 
-<images/monitor-everybody.pdf, id=766, 353.32pt x 100.375pt>
+<images/monitor-everybody.pdf, id=765, 353.32pt x 100.375pt>
 File: images/monitor-everybody.pdf Graphic file (type pdf)
 
 <use images/monitor-everybody.pdf>
-Package pdftex.def Info: images/monitor-everybody.pdf used on input line 298.
+Package pdftex.def Info: images/monitor-everybody.pdf used on input line 351.
 (pdftex.def)             Requested size: 242.52063pt x 68.89888pt.
+ [16pdfTeX warning (ext4): destination with the same identifier (name{figure.5}
+) has been already used, duplicate ignored
 
-<images/frame-b.pdf, id=768, 262.9825pt x 97.36375pt>
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.356 
+       <./images/example_01.pdf> <./images/example_01_a.pdf> <./images/example_
+01_b.pdf>] <images/frame-b.pdf, id=798, 262.9825pt x 97.36375pt>
 File: images/frame-b.pdf Graphic file (type pdf)
- <use images/frame-b.pdf>
-Package pdftex.def Info: images/frame-b.pdf used on input line 327.
+
+<use images/frame-b.pdf>
+Package pdftex.def Info: images/frame-b.pdf used on input line 380.
 (pdftex.def)             Requested size: 196.08252pt x 72.59772pt.
 
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 328.
+LaTeX Font Warning: Command \small invalid in math mode on input line 381.
 
-[16pdfTeX warning (ext4): destination with the same identifier (name{figure.5})
+[17pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.345 $$
-         <./images/example_01.pdf> <./images/example_01_a.pdf> <./images/exampl
-e_01_b.pdf>] [17pdfTeX warning (ext4): destination with the same identifier (na
-me{figure.6}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.345 $$
-        pdfTeX warning (ext4): destination with the same identifier (name{figur
-e.7}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.345 $$
-         <./images/simulation_01_F_a.pdf> <./images/simulation_01_A01_a.pdf> <.
-/images/simulation_01_A02_a.pdf> <./images/simulation_01_A03_a.pdf> <./images/s
-imulation_02_F.pdf> <./images/monitor-everybody.pdf>]
+l.396 \end{equation*}
+                      <./images/simulation_01_F_a.pdf> <./images/simulation_01_
+A01_a.pdf> <./images/simulation_01_A02_a.pdf> <./images/simulation_01_A03_a.pdf
+>]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `!tbp') on input line 350.
+               Default added (so using `!tbp') on input line 403.
 
-<images/consensus-0.pdf, id=939, 206.7725pt x 439.6425pt>
+<images/consensus-0.pdf, id=876, 206.7725pt x 439.6425pt>
 File: images/consensus-0.pdf Graphic file (type pdf)
 
 <use images/consensus-0.pdf>
-Package pdftex.def Info: images/consensus-0.pdf used on input line 355.
+Package pdftex.def Info: images/consensus-0.pdf used on input line 408.
 (pdftex.def)             Requested size: 113.52063pt x 241.37477pt.
 
-<images/consensus-1.pdf, id=941, 206.7725pt x 439.6425pt>
+<images/consensus-1.pdf, id=878, 206.7725pt x 439.6425pt>
 File: images/consensus-1.pdf Graphic file (type pdf)
 
 <use images/consensus-1.pdf>
-Package pdftex.def Info: images/consensus-1.pdf used on input line 357.
+Package pdftex.def Info: images/consensus-1.pdf used on input line 410.
 (pdftex.def)             Requested size: 113.52063pt x 241.37477pt.
 
-<images/consensus-2.pdf, id=943, 206.7725pt x 439.6425pt>
+<images/consensus-2.pdf, id=880, 206.7725pt x 439.6425pt>
 File: images/consensus-2.pdf Graphic file (type pdf)
 
 <use images/consensus-2.pdf>
-Package pdftex.def Info: images/consensus-2.pdf used on input line 359.
+Package pdftex.def Info: images/consensus-2.pdf used on input line 412.
 (pdftex.def)             Requested size: 113.52063pt x 241.37477pt.
 
-<images/consensus-3.pdf, id=945, 206.7725pt x 439.6425pt>
+<images/consensus-3.pdf, id=882, 206.7725pt x 439.6425pt>
 File: images/consensus-3.pdf Graphic file (type pdf)
 
 <use images/consensus-3.pdf>
-Package pdftex.def Info: images/consensus-3.pdf used on input line 361.
+Package pdftex.def Info: images/consensus-3.pdf used on input line 414.
 (pdftex.def)             Requested size: 113.52063pt x 241.37477pt.
-) [18pdfTeX warning (ext4): destination with the same identifier (name{figure.8
-}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.687 F
-       or the sake of clarity, consider the scenario in Fig.~\ref{fig:sofide...
-pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) ha
-s been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.687 F
-       or the sake of clarity, consider the scenario in Fig.~\ref{fig:sofide...
- <./images/frame-b.pdf> <./images/consensus-0.pdf> <./images/consensus-1.pdf> <
-./images/consensus-2.pdf> <./images/consensus-3.pdf>]
+)
 
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `!tbp') on input line 689.
 
-<images/regood1.png, id=1062, 602.25pt x 602.25pt>
+<images/regood1.png, id=885, 602.25pt x 602.25pt>
 File: images/regood1.png Graphic file (type png)
  <use images/regood1.png>
 Package pdftex.def Info: images/regood1.png used on input line 691.
 (pdftex.def)             Requested size: 159.95874pt x 159.95387pt.
 
-<images/regood3.png, id=1064, 602.25pt x 602.25pt>
+<images/regood3.png, id=887, 602.25pt x 602.25pt>
 File: images/regood3.png Graphic file (type png)
  <use images/regood3.png>
 Package pdftex.def Info: images/regood3.png used on input line 692.
 (pdftex.def)             Requested size: 159.95874pt x 159.95387pt.
 
-<images/regood6.png, id=1066, 602.25pt x 602.25pt>
+<images/regood6.png, id=889, 602.25pt x 602.25pt>
 File: images/regood6.png Graphic file (type png)
  <use images/regood6.png>
 Package pdftex.def Info: images/regood6.png used on input line 693.
 (pdftex.def)             Requested size: 159.95874pt x 159.95387pt.
 
-[19pdfTeX warning (ext4): destination with the same identifier (name{figure.10}
-) has been already used, duplicate ignored
+[18pdfTeX warning (ext4): destination with the same identifier (name{figure.7})
+ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.745 \end{equation*}
-                      <./images/regood1.png (PNG copy)> <./images/regood3.png (
-PNG copy)> <./images/regood6.png (PNG copy)>]
+l.697 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+8}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.697 
+       <./images/frame-b.pdf> <./images/simulation_02_F.pdf> <./images/monitor-
+everybody.pdf>] [19pdfTeX warning (ext4): destination with the same identifier 
+(name{figure.9}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.712 \end{equation*}
+                     pdfTeX warning (ext4): destination with the same identifie
+r (name{figure.10}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.712 \end{equation*}
+                      <./images/consensus-0.pdf> <./images/consensus-1.pdf> <./
+images/consensus-2.pdf> <./images/consensus-3.pdf> <./images/regood1.png (PNG c
+opy)> <./images/regood3.png (PNG copy)> <./images/regood6.png (PNG copy)>]
 
 LaTeX Font Warning: Command \small invalid in math mode on input line 746.
 
@@ -1451,7 +1588,7 @@ LaTeX Font Warning: Command \small invalid in math mode on input line 793.
 
 LaTeX Font Warning: Command \small invalid in math mode on input line 793.
 
-[20]
+[20] [21]
 
 LaTeX Font Warning: Command \small invalid in math mode on input line 895.
 
@@ -1461,7 +1598,6 @@ LaTeX Font Warning: Command \small invalid in math mode on input line 902.
 
 LaTeX Font Warning: Command \small invalid in math mode on input line 902.
 
-[21]
 
 LaTeX Font Warning: Command \small invalid in math mode on input line 915.
 
@@ -1507,6 +1643,7 @@ LaTeX Font Warning: Command \small invalid in math mode on input line 933.
 
 LaTeX Font Warning: Command \small invalid in math mode on input line 937.
 
+[22]
 
 LaTeX Font Warning: Command \small invalid in math mode on input line 945.
 
@@ -1519,28 +1656,28 @@ Underfull \hbox (badness 10000) in paragraph at lines 952--955
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `!tbp') on input line 984.
 
-<images/A01-S00140.png, id=1087, 602.25pt x 602.25pt>
+<images/A01-S00140.png, id=1092, 602.25pt x 602.25pt>
 File: images/A01-S00140.png Graphic file (type png)
 
 <use images/A01-S00140.png>
 Package pdftex.def Info: images/A01-S00140.png used on input line 988.
 (pdftex.def)             Requested size: 118.6778pt x 118.67427pt.
 
-<images/A02-S00140.png, id=1088, 602.25pt x 602.25pt>
+<images/A02-S00140.png, id=1093, 602.25pt x 602.25pt>
 File: images/A02-S00140.png Graphic file (type png)
 
 <use images/A02-S00140.png>
 Package pdftex.def Info: images/A02-S00140.png used on input line 990.
 (pdftex.def)             Requested size: 118.6778pt x 118.67427pt.
 
-<images/A03-S00140.png, id=1089, 602.25pt x 602.25pt>
+<images/A03-S00140.png, id=1094, 602.25pt x 602.25pt>
 File: images/A03-S00140.png Graphic file (type png)
 
 <use images/A03-S00140.png>
 Package pdftex.def Info: images/A03-S00140.png used on input line 992.
 (pdftex.def)             Requested size: 118.6778pt x 118.67427pt.
 
-<images/A04-S00140.png, id=1090, 602.25pt x 602.25pt>
+<images/A04-S00140.png, id=1095, 602.25pt x 602.25pt>
 File: images/A04-S00140.png Graphic file (type png)
 
 <use images/A04-S00140.png>
@@ -1551,14 +1688,8 @@ Overfull \hbox (15.91113pt too wide) in paragraph at lines 986--997
  []$ [] $ 
  []
 
-[22] [23pdfTeX warning (ext4): destination with the same identifier (name{figur
-e.11}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.1042 
-       pdfTeX warning (ext4): destination with the same identifier (name{table.
-1}) has been already used, duplicate ignored
+[23pdfTeX warning (ext4): destination with the same identifier (name{figure.11}
+) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
@@ -1729,35 +1860,38 @@ Overfull \hbox (3.35559pt too wide) in paragraph at lines 1085--1096
  [][] 
  []
 
-
-LaTeX Warning: Citation `ramadge1989cde' on page 24 undefined on input line 115
-7.
-
-
-LaTeX Warning: Citation `balluchi2002doh' on page 24 undefined on input line 11
-57.
-
-
-LaTeX Warning: Citation `zad2003fdd' on page 24 undefined on input line 1157.
-
-
-LaTeX Warning: Citation `monteriu2007mbs' on page 24 undefined on input line 11
-57.
-
-
-LaTeX Warning: Citation `ssrr08-fagiolini' on page 24 undefined on input line 1
-157.
-
-(./the-appendix.tex
-
-LaTeX Warning: Citation `cassandras' on page 24 undefined on input line 9.
-
-[24] [25pdfTeX warning (ext4): destination with the same identifier (name{figur
-e.12}) has been already used, duplicate ignored
+[24pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
+has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.17 $$
+l.1099 
+       ]
+
+LaTeX Warning: Citation `ramadge1989cde' on page 25 undefined on input line 115
+7.
+
+
+LaTeX Warning: Citation `balluchi2002doh' on page 25 undefined on input line 11
+57.
+
+
+LaTeX Warning: Citation `zad2003fdd' on page 25 undefined on input line 1157.
+
+
+LaTeX Warning: Citation `monteriu2007mbs' on page 25 undefined on input line 11
+57.
+
+
+LaTeX Warning: Citation `ssrr08-fagiolini' on page 25 undefined on input line 1
+157.
+
+[25pdfTeX warning (ext4): destination with the same identifier (name{figure.12}
+) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.1158 
         <./images/C00107-A01-T00-CS01-b.png> <./images/C00107-A01-T00-CS02.png 
 (PNG copy)> <./images/C00107-A01-T00-CS03.png (PNG copy)> <./images/C00107-A02-
 T00-CS00-b.png> <./images/C00107-A02-T00-CS01-b.png> <./images/C00107-A02-T00-C
@@ -1766,24 +1900,27 @@ S02.png (PNG copy)> <./images/C00107-A02-T00-CS03.png (PNG copy)> <./images/C00
 03-T00-CS02-b.png> <./images/C00107-A03-T00-CS03.png (PNG copy)> <./images/C001
 07-A04-T00-CS00-b.png> <./images/C00107-A04-T00-CS01-b.png> <./images/C00107-A0
 4-T00-CS02-b.png> <./images/C00107-A04-T00-CS03.png (PNG copy)> <./images/C0010
-7-A01-T00-CS00-b.png>]
-** ATTENTION: \proof is deprecated (line 18). Use \IEEEproof instead.
-** ATTENTION: \proof is deprecated (line 48). Use \IEEEproof instead.
+7-A01-T00-CS00-b.png>] (./the-appendix.tex
+
+LaTeX Warning: Citation `cassandras' on page 26 undefined on input line 9.
+
 [26pdfTeX warning (ext4): destination with the same identifier (name{figure.13}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.50 \begin{equation*}
-                       <./images/viano21.png> <./images/viano31.png> <./images/
-viano41.png>]
+l.10 
+      <./images/viano21.png> <./images/viano31.png> <./images/viano41.png>]
+** ATTENTION: \proof is deprecated (line 18). Use \IEEEproof instead.
+** ATTENTION: \proof is deprecated (line 48). Use \IEEEproof instead.
 ** ATTENTION: \proof is deprecated (line 78). Use \IEEEproof instead.
+[27]
 ** ATTENTION: \proof is deprecated (line 110). Use \IEEEproof instead.
-[27])
+[28])
 No file tro-ids.bbl.
 (./the-biography.tex)
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1169.
- [28]
+ [29]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 1169.
  (./tro-ids.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1169.
@@ -1801,13 +1938,13 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1169.
  ) 
 Here is how much of TeX's memory you used:
- 16852 strings out of 493013
- 275683 string characters out of 6133328
+ 16870 strings out of 493013
+ 275992 string characters out of 6133328
  421186 words of memory out of 5000000
- 19888 multiletter control sequences out of 15000+600000
+ 19902 multiletter control sequences out of 15000+600000
  125345 words of font info for 165 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,16n,94p,1954b,472s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 57i,18n,94p,1954b,472s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2016/texmf-dist/fonts/type1/public/bbold-type1/bbold10.pfb></usr/local/t
 exlive/2016/texmf-dist/fonts/type1/public/bbold-type1/bbold7.pfb></usr/local/te
@@ -1841,10 +1978,10 @@ symbols/msam10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/courier/
 ucrr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/loc
 al/texlive/2016/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on tro-ids.pdf (28 pages, 3280108 bytes).
+Output written on tro-ids.pdf (29 pages, 3284655 bytes).
 PDF statistics:
- 1309 PDF objects out of 1440 (max. 8388607)
- 1028 compressed objects within 11 object streams
- 78 named destinations out of 1000 (max. 500000)
+ 1314 PDF objects out of 1440 (max. 8388607)
+ 1032 compressed objects within 11 object streams
+ 79 named destinations out of 1000 (max. 500000)
  596 words of extra memory for PDF output out of 10000 (max. 10000000)
 

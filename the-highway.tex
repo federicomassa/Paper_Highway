@@ -81,7 +81,7 @@ The system can be described as an instance of $\mathcal{P}$ with the environment
  & & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; 
 \left. \lfloor \frac{y_i}{w} \rfloor w \leq y \leq \left( \lfloor \frac{y_i}{w} \rfloor + 1 \right) w \right. \\ 
 & & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;
-\left. (1 - f)v_{i, des} \leq v_{des} \leq (1+f)v_{i, des} \right.
+\left. (1 - f)v_{des, i} \leq v_{des} \leq (1+f)v_{des, i} \right.
 \rbrace \, , \\
 %
 \eta_{i,8} := \eta_{i, backCompatible} & : & \Q \rightarrow 2^\Q \\
@@ -89,7 +89,7 @@ The system can be described as an instance of $\mathcal{P}$ with the environment
  & & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; 
 \left. \lfloor \frac{y_i}{w} \rfloor w \leq y \leq \left( \lfloor \frac{y_i}{w} \rfloor + 1 \right) w \right. \\ 
 & & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;
-\left. (1 - f)v_{i, des} \leq v_{des} \leq (1+f)v_{i, des} \right.
+\left. (1 - f)v_{des, i} \leq v_{des} \leq (1+f)v_{des, i} \right.
 \rbrace \, , \\
 %
 \eta_{i,9} := \eta_{i, rightOvertakeable} & : & \Q \rightarrow 2^\Q \\
@@ -97,7 +97,7 @@ The system can be described as an instance of $\mathcal{P}$ with the environment
  & & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; 
 \left. \left( \lfloor \frac{y_i}{w} \rfloor - 1 \right) \leq y \leq \lfloor \frac{y_i}{w} \rfloor w \right. \\ 
 & & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;
-\left. v_{des} \leq (1-f)v_{i, des} \right.
+\left. v_{des} \leq (1-f)v_{des, i} \right.
 \rbrace \,  \\
 
  
@@ -224,11 +224,6 @@ The finite set of discrete states is $\Sigma_i=\{\mfast, \mslow,$ $\mleft, \mrig
 & & \begin{array}{l} (\mplatoon, e^{i,14})) \end{array} \mapsto \mslow \\
 %%% PLATOON -> LEFT
 & & \begin{array}{l} (\mplatoon, e^{i,15})) \end{array} \mapsto \mleft \\
-%%% 
-
-
-
-
 
 \end{array}
 \end{equation*}
@@ -250,7 +245,7 @@ a_i  & : & \Q \times \Sigma_i \rightarrow \real \\
 \mapsto 
 \left \lbrace
 \begin{array}{cl}
-\bar{a} & \mathrm{if} \ v_i < v_{max}^i \\
+\bar{a} & \mathrm{if} \ v_i < v_{des, i} \\
 0 & \mathrm{otherwise}
 \end{array}
 \right. \, ,
@@ -262,13 +257,23 @@ a_i  & : & \Q \times \Sigma_i \rightarrow \real \\
 -\bar{a} & \mathrm{if} \ v_i > 0 \\
 0 & \mathrm{otherwise}
 \end{array}
+\right. \, , \\
+& & \begin{array}{l} (q_i, \mplatoon) \end{array} 
+\mapsto 
+\left \lbrace
+\begin{array}{cl}
+-b_b(x_i - x_{b}) - b_f(x_i - x_f) - \gamma b_b (v_i - v_b) - \gamma b_f (v_i - v_f) & \mathrm{if} \textcircled{1}\\
+-b_f(x_i - x_{f} + d_{ref}) - \gamma b_f(v_i - v_f) & \mathrm{if} \textcircled{2} \\
+-b_b(x_i - x_{b} - d_{ref}) - \gamma b_b k_{leader} (v_i - v_{des}) & \mathrm{if} \textcircled{3} \\
+-b_b(x_i - x_{b} - d_{ref}) - b_f(x_i - x_f + d_f) - \gamma b_b (v_i - v_b) - \gamma b_f (v_i - v_f) & \mathrm{if} \textcircled{4} \\
+ \end{array}
 \right. \, ,
 \end{array}
 \end{equation*}
 \begin{equation*}
 \begin{array}{rcl}
 \omega_i  & : & \Q \times \Sigma_i \rightarrow \real \\
-& & \begin{array}{l} (q_i, \mfast), \\ (q_i, \mslow) \end{array}
+& & \begin{array}{l} (q_i, \mfast), \\ (q_i, \mslow) \\ (q_i, \mplatoon) \end{array}
 \mapsto 
 \left( \left( y^*(q_i) - y_i \right) \frac{\sin\theta_i}{\theta_i} - \mu \, \theta_i \right) v_i \, , \\
 & &  \begin{array}{l}  (q_i, \mleft), \end{array} \mapsto 
@@ -288,7 +293,21 @@ a_i  & : & \Q \times \Sigma_i \rightarrow \real \\
 \right. \, ,
 \end{array} 
 \end{equation*}
-where $y^*(q_i) = \left( \left\lfloor \frac{y_i}{w} \right\rfloor + \frac{1}{2} \right) w$ is the current lane center, $\theta_{max}$ is the agent's maximum curvature angle, and $\mu$, $\bar{a}$ and $\bar{\omega}$ are positive constants.
+{\color{red} where $b_b$, $b_f$, $\gamma$, $k_{leader}$ are positive constants, $d_f$ is the aforementioned forward safety distance}, $y^*(q_i) = \left( \left\lfloor \frac{y_i}{w} \right\rfloor + \frac{1}{2} \right) w$ is the current lane center, $\theta_{max}$ is the agent's maximum curvature angle, and $\mu$, $\bar{a}$ and $\bar{\omega}$ are positive constants {\color{red}and the conditions are defined as follows:}
+\begin{equation*}
+\begin{array}{cl}
+\left \lbrace 
+\begin{array}{l}
+\textcircled{1}: \mathsf{Vehicles \, in \, front \, of \, and \, behind~\ai \, have \, compatible \, v_{des}\,} \\
+\textcircled{2}: \mathsf{Only \, the \, vehicle \, in \, front \, of ~\ai \, have \, a compatible \, v_{des}\,}\\
+\textcircled{3}: \mathsf{The \, vehicle \, behind~\ai \, has \, a \, compatible \, v_{des}\, and \, no \, vehicles \, are \, blocking \, the \, forward \, area}\\
+\textcircled{4}: \mathsf{The \, vehicle \, behind~\ai \, has \, a \, compatible \, v_{des}\, and \, a \, vehicle \, is \, blocking \, the \, forward \, area}
+\end{array}
+\right.
+\end{array}
+\end{equation*}
+
+{\color{red}These conditions respectively describe the controller of a vehicle in the middle of a platoon, in the tail, the platoon leader and a forced platoon situation that arises when the agent cannot overtake a slower vehicle.}\\
 
 Finally, the visibility map returns the set of configurations laying within a distance $R_i$ and that are not hidden by other cars (see e.g. the known sweeping line algorithm in~\cite{thrun2002pr} for its computation, and the examples in Fig.~\ref{fig:ids:model:visi}). A formal description of the map is avoided for space reasons.
 %%
