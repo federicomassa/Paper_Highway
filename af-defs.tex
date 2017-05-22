@@ -1,0 +1,204 @@
+
+% Adriano's
+
+\newcommand{\AFnewpage}{\newpage}
+
+\usepackage{amssymb, amsmath, latexsym, amsfonts, mathrsfs, amsbsy}
+\usepackage[english]{babel}
+\usepackage[dvips]{graphicx}
+\graphicspath{./Images/}
+% \DeclareGraphicsExtensions{.eps}
+\usepackage[cp1252, latin1]{inputenc}
+\usepackage{epsfig, color}
+\usepackage{cite, hyperref}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage{makeidx, glossaries}
+\usepackage{url}
+\usepackage{flushend}
+
+\usepackage[caption=false, font=footnotesize]{subfig}
+\usepackage{mathbbol}
+\usepackage{stmaryrd}
+\usepackage{enumerate}
+\usepackage{epigraph}
+\usepackage{multirow}
+\usepackage{footnote}
+\usepackage{bbm}
+
+
+\usepackage[T1]{fontenc}
+\usepackage{calligra}
+
+\def\real{\Bbb{R}}
+\def\natural{\Bbb{N}}
+\def\bool{\Bbb{B}}
+\def\booldom{\tilde{\bool}}
+
+
+\newcommand{\comment}[1]{{#1}}
+%\newcommand{\comment}[1]{{\bf #1}}
+
+
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\PQ}{\mathcal{P}(\mathcal{Q})}
+
+\newcommand{\defeq}{\stackrel{\triangle}{=}}
+\newcommand{\xor}{\oplus}
+\newcommand{\inc}[1]{\mathcal{B}\left(#1\right)}
+\newcommand{\andope}{\texttt{and}}
+\newcommand{\orope}{\texttt{or}}
+\newcommand{\xorope}{\texttt{xor}}
+\newcommand{\notope}{\texttt{not}}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\diam}{\mathrm{diam}}
+\newcommand{\visdiam}{\texttt{vis-diam}}
+\newcommand{\mydefeq}{\stackrel{\text{\tiny def}}{=}}
+\newcommand{\ruleset}{R}
+\newcommand{\unity}{\tilde{1}}
+\newcommand{\zero}{\tilde{0}}
+\newcommand{\symdiff}{\mathcal{D}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\PX}{\mathcal{P}(\X)}
+%\newcommand{\notimage}[1]{}
+
+\newcommand{\ai}{\mathcal{A}_i}
+\newcommand{\aj}{\mathcal{A}_j}
+\newcommand{\ah}{\mathcal{A}_h}
+\newcommand{\ak}{\mathcal{A}_k}
+%\newcommand{\mi}{\mathcal{M}_i}
+%\newcommand{\mj}{\mathcal{M}_j}
+%\newcommand{\mh}{\mathcal{M}_h}
+\newcommand{\finire}[1]{\color{cyan}{#1}\color{black}}
+\newcommand{\azero}{\mathcal{A}_0}
+\newcommand{\auno}{\mathcal{A}_1}
+\newcommand{\adue}{\mathcal{A}_2}
+\newcommand{\atre}{\mathcal{A}_3}
+\newcommand{\aquattro}{\mathcal{A}_4}
+\newcommand{\acinque}{\mathcal{A}_5}
+\newcommand{\comb}{\textsf{comb}}
+\newcommand{\uio}{\textsf{uio}}
+\newcommand{\proj}{\textsf{proj}}
+
+
+\newcommand{\macc}{\small{\mathsf{ACC}}}
+\newcommand{\mdec}{\small{\mathsf{DEC}}}
+\newcommand{\mfast}{\small{\mathsf{FAST}}}
+\newcommand{\mslow}{\small{\mathsf{SLOW}}}
+\newcommand{\mleft}{\small{\mathsf{LEFT}}}
+\newcommand{\mright}{\small{\mathsf{RIGHT}}}
+\newcommand{\mplatoon}{\small{\mathsf{PLATOON}}}
+
+
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\vi}{V_i} %%%%%
+\newcommand{\vh}{V_h} %%%%%
+\newcommand{\ih}{\mathcal{I}_h}
+\newcommand{\ii}{\mathcal{I}_i}
+
+\newcommand{\Q}{\mathcal{Q}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\U}{\mathcal{U}}
+%\newcommand{\vinot}{\bar{\mathcal{V}}_i}
+\newcommand{\h}{\mathcal{H}}
+\newcommand{\htilde}{\tilde{\mathcal{H}}}
+
+\newcommand{\add}{\textsf{add}}
+\newcommand{\free}{\textsf{free}}
+\newcommand{\busy}{\textsf{busy}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proof}{Proof}
+\newtheorem{definition}{Definition}
+\newtheorem{problem}{Problem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+% --- Algorithm
+\usepackage{algorithm, algorithmic}
+\renewcommand{\algorithmictrue}{\textsf{true}}
+\renewcommand{\algorithmicfalse}{\textsf{false}}
+\renewcommand{\algorithmicrequire}{\textbf{Require:}}
+\renewcommand{\algorithmicensure}{\textbf{Ensure:}}
+\renewcommand{\algorithmicend}{\textbf{end}}
+\renewcommand{\algorithmicif}{\textbf{if}}
+\renewcommand{\algorithmicthen}{\textbf{then}}
+\renewcommand{\algorithmicelse}{\textbf{else}}
+\renewcommand{\algorithmicelsif}{\algorithmicelse\ \algorithmicif}
+\renewcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif}
+\renewcommand{\algorithmicfor}{\textbf{for}}
+\renewcommand{\algorithmicforall}{\textbf{for all}}
+\renewcommand{\algorithmicdo}{\textbf{do}}
+\renewcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor}
+\renewcommand{\algorithmicwhile}{\textbf{while}}
+\renewcommand{\algorithmicendwhile}{\algorithmicend\ \algorithmicwhile}
+\renewcommand{\algorithmicloop}{\textbf{loop}}
+\renewcommand{\algorithmicendloop}{\algorithmicend\ \algorithmicloop}
+\renewcommand{\algorithmicrepeat}{\textbf{repeat}}
+\renewcommand{\algorithmicuntil}{\textbf{until}}
+\renewcommand{\algorithmicprint}{\textbf{print}}
+\renewcommand{\algorithmicreturn}{\textbf{return}}
+\renewcommand{\algorithmiccomment}[1]{\hfill{\footnotesize $\triangleleft$ #1}}
+\newcommand{\AND}{\textsf{and}\ }
+\newcommand{\SPACE}{\vspace{0.25cm}}
+\newcommand{\BREAK}{\STATE \textsf{break}\ }
+\newcommand{\CONTINUE}{\STATE \textsf{continue}\ }
+\newcommand{\INPUTS}{\item[\textbf{Inputs:}]}
+\newcommand{\OUTPUTS}{\item[\textbf{Outputs:}]}
+\newcommand{\PROVIDE}{\item[\textbf{Provide:}]}
+%\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Gianni's
+\newcommand{\itemit}[1]{\item[\textnormal{\textit{#1}}]}
+\newcommand{\qedsymbol}{$\blacksquare$}
+%\newtheorem{definition}{Definition}[chapter]
+\newtheorem{note}{Note}[section]
+%\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+
+%\renewcommand{\[}{\big[}
+%\renewcommand{\]}{\big]}
+%\renewcommand{\(}{\big(}
+%\renewcommand{\)}{\big)}
+%\renewcommand{\{}{\big\lbrace}
+%\renewcommand{\}}{\big\rbrace}
+%\renewcommand{\j}{\jmath}
+%\newcommand{\e}{\mathrm{e}}
+%\newcommand{\id}{\mathrm{id}}
+%\newcommand{\true}{\mathsf{true}}
+%\newcommand{\false}{\mathsf{false}}
+
+\newcommand{\cooperative}{\mathsf{cooperative}}
+\newcommand{\uncertain}{\mathsf{uncertain}}
+\newcommand{\uncooperative}{\mathsf{uncooperative}}
+
+%\newcommand{\1}{\Upsilon}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+%\newcommand{\dt}{\mathrm{d}t}
+%\newcommand{\I}{\mathrm{Inv}}
+
+%\newcommand{\cntr}{\textsf{ctr}}
+%\newcommand{\fd}{\textsf{Fd}}
+%\newcommand{\lt}{\textsf{Lt}}
+%\newcommand{\rt}{\textsf{Rt}}
+%\newcommand{\al}{\textsf{aln}}
+
+
+
+
+
+\newcommand{\shone}{\tilde{s}_{i,k}}
+\newcommand{\nshone}{\tilde{p}_{i,k}}
+\newcommand{\shtwo}{\tilde{s}_{i,m}}
+\newcommand{\nshtwo}{\tilde{p}_{i,m}}
+
+
+
+
+

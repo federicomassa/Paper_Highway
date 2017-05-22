@@ -1,0 +1,1169 @@
+
+%
+% File: 		TRO-IDS.tex
+% Author: 		A. Fagiolini, G. Dini, A. Bicchi
+
+\documentclass[journal, onecolumn, 12pt]{styles/IEEEtran}
+
+\include{af-defs}
+\renewcommand{\AFnewpage}{}
+
+\bibliographystyle{IEEEtran}
+
+\title{Automatic Generation of Distributed Misbehavior Detectors for the Security of Societies of Robots}
+
+\author{Adriano~Fagiolini,~\IEEEmembership{Member,~IEEE,} Gianluca~Dini, and~Antonio~Bicchi,~\IEEEmembership{Fellow,~IEEE} \thanks{A. Fagiolini is with the Department of Electrical, Electronics, Telecommunication, Chemistry, Automation and Mathematical Models, Faculty of Engineering, Universit\`a degli Studi di Palermo, Italy, and with the Interdepartmental Research Center~``E.~Piaggio'', Faculty of Engineering, Universit\`a di Pisa, Italy, {\tt\small fagiolini@unipa.it}.} \thanks{G. Dini is with the Department of Information Engineering, Faculty of Engineering, Universit\`a di Pisa, Italy, {\tt\small gianluca.dini@ing.unipi.it}.} \thanks{A. Bicchi is with the Interdepartmental Research Center~``E.~Piaggio'', Faculty of Engineering, Universit\`a di Pisa, Italy, and with Department of Advanced Robotics, Istituto Italiano di Tecnologia, Genova, Italy {\tt\small bicchi@centropiaggio.unipi.it}.} 
+}
+
+\begin{document}
+
+\maketitle
+
+%
+%
+%
+
+
+%!TEX root = tro-ids.tex
+
+\begin{abstract}
+This paper addresses the problem of detecting possible intruders in a robot society, i.e., a group of autonomous robots which coexist in a shared environment and interact with each other according to a set of ``social behaviors'', or common rules. Such rules specify what actions each robot is allowed to perform in the pursuit of its individual goals: rules are distributed, i.e. they can be evaluated based only on the state of the individual robot, and on local information that can be sensed directly or through communication with immediate neighbors. We consider intruders as robots which misbehave, i.e. do not follow the rules, because of either spontaneous failures or malicious reprogramming. Our goal is to detect intruders by observing the congruence of their behavior with the social rules as applied to the current state of the overall system.  Moreover, in accordance with the fully distributed nature of the problem, the detection itself must be performed by individual robots, based only on local information. We present a formalism that allows to model uniformly a large variety of possible robot societies and propose an Intrusion Detection protocol that is based on two main components. The first is a {\em  monitor} that an individual robot runs, using only locally available information, and applies to each of its neighbors, which constructs the set of all possible system states which might explain the observed behavior and are consistent with its own limited direct knowledge. The second component is a set--valued consensus algorithm allowing different ``views'' estimated by different local monitors to be combined through communication. We present simulative results of the application of our method to a system of vehicles moving within an urban--like environment, and experiments obtained in a real industrial scenario setup including autonomous cooperative forklifts.
+%
+%The paper introduces a formalism that allows to model uniformly a large variety of possible robot societies. The main contribution consists in the proposal of an Intrusion Detection System, i.e. a protocol that, under suitable conditions, allows individual robots to detect possible misbehaving robots in their vicinity, and trigger possible further actions to secure the society. The protocol is based on two main components. The first is a {\em  monitor} that an individual robot runs, using only locally available information, and applies to each of its neighbors, which constructs the set of all possible system states which might explain the observed behavior and are consistent with its own, limited, direct knowledge. The second component is a set--valued consensus algorithm allowing different ``views'' estimated by different local monitors to be combined through communication. Sufficient conditions are given, which ensure finite--time convergence towards a consensus state, and hence towards the decision that would be made by a hypothetical centralized IDS with complete
+%information. It is worth noting that the generality of the protocol formalism makes so that local monitors can be automatically generated once the cooperation rules and the robot dynamics are specified. The effectiveness of the proposed technique is shown through application to simulated robotic systems and a real industrial automated system.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Intrusion detection, security, multi-robot robotics, set--valued consensus algorithms, industrial autonomous systems.
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+
+\IEEEPARstart{T}{he} availability of distributed systems gave rise in the late~$80$s to a profound rethinking of many decision making problems~\cite{bertsekas1991sap, lynch-book} and enabled solutions that were impossible  before~\cite{ceri1984distributed, foster1999grid}. A similar trend is now happening  in Control and will soon enable a formidable number of new robotic applications. Various distributed control policies have been proposed for formation control, flocking, sensor coverage, and intelligent transportation (see e.g.\cite{olfatisaber2006fma, figueiredo2001tdi, ram08-bddlpss, mcqueen1999intelligent}). An intrinsic paradigm shift is indeed conveyed, from the idea of a distributed intelligent system as a collection of interacting software processes, to that of a network of physical robots that take information from the environment and act within the environment itself to change it. What will be meant by a {\em distributed intelligent robot} is the smart interconnection of heterogeneous units having different sensing, computation, and actuation abilities. 
+%
+%\IEEEPARstart{T}{hat} the availability of distributed systems gave rise in the late $80$s to a profound rethinking of many decision making problems~\cite{
+%%tsitsiklis1986dad, 
+%bertsekas1991sap, lynch-book}, and even enabled solutions to them that could not be possible before~\cite{ceri1984distributed, foster1999grid}, is on everyone's records. It is easy to foresee that a similar trend is happening also in Control and will soon enable a formidable number of new robotic applications. Various distributed control policies have been proposed for e.g. formation control, flocking, sensor coverage, and intelligent transportation (see e.g.\cite{olfatisaber2006fma, figueiredo2001tdi, danesi06, mcqueen1999intelligent}).
+%%To support this are the strong cost reduction and size miniaturization of electronic components as well as mechanical actuators. 
+%An intrinsic paradigm shift is indeed conveyed, from the idea of a distributed intelligent system as a collection of interacting software processes, to that of a network of physical robots that take information from the environment and act within the environment itself to change it. What will be meant by a distributed intelligent robot is the smart interconnection of heterogeneous units having different sensing, computation, and actuation abilities. 
+%
+It is foreseeable that, in a near future, number of robots produced by different makers will act within same environments, for which they will need to possess ``social'' interaction skills~\cite{ram10-bfp}. To this purpose, various theoretical issues are still unsolved, which include e.g. the definition of few standard formalisms to describe all possible {\em behaviors} of a cooperative robot, and whose translation into the corresponding control systems is rapid and systematic.
+Standards are common practice in Information Technology, their need in Robotics is perceived at every application level~\cite{ram10-pbb}, although we believe that the larger variety and higher complexity of our interconnected cyber--physical systems may be the principal causes, explaining why they have not been established yet. Such formalisms should enable to specify e.g. how two robots with different mechanics can safely manipulate an object together. 
+
+%
+\begin{figure}[!]
+\centering
+\includegraphics[width=0.48\textwidth,clip]{images/viano11.png}
+\caption{Autonomous forklifts simulating their operation in a factory's warehouse at Elettric80 S.p.A.'s premises.}
+\label{fig:viano:scenario}
+\end{figure}
+%
+
+In this vein we provide a formalism that consists in a hybrid model capturing the behavior of a general class of robots. According to our formalism, robots have the ability to interact with other neighboring robots based on event--based rules. For the sake of clarity, let us informally introduce all the components of our formalism through the example of an automated forklift moving in a factory's warehouse (Fig.~\ref{fig:viano:scenario}). A forklift is a system described by a {\em configuration} vector and by a {\em dynamics}, including inertial and geometric parameters, that depend on its physical structure, its size and shape, etc. If the forklift is meant to be used within an environment with obstacles and other cooperative forklifts, the forklift itself is provided with a supervisory system, that can be implemented as an {\em automaton} and that allows it to perform a finite number of maneuvers. Each maneuver is represented by a different {\em discrete state} of the automaton and is continuously {\em decoded} into a suitable control value to be applied to the forklift's actuators. Moreover, a forklift has onboard sensors, such as cameras or infrareds, that determine its {\em visibility} capacities and provide information that is used to plan its trajectory and prevent collisions with obstacles or other forklifts. To this purpose, its sensor outputs are constantly {\em encoded} into a finite number of {\em events}, indicating e.g the presence or absence of another {\em neighboring} forklift, that may or may not require the forklift to change its current maneuver. As a whole, a cooperative forklift is a complex system, that can be described by the hybrid formalism that we propose in Section~\ref{sec:model}, where all such components are formally defined.
+
+Furthermore, such open dynamic scenarios may be unattended or possibly hostile. For this reason robots may become appealing targets for attackers aiming at degrading the system's QoS or even causing serious damage. In the example above, one attacker may tamper the supervisory system of a forklift, which may stop in a corridor or even crash into another forklift. The whole system is at risk also when only some robots' behaviors deviate from specification~\cite{baras07}.
+%
+%Moreover, robot cooperation is advantageous in many applications as it enables desirable properties such as scalability, reconfigurability, and robustness~(see e.g. \cite{ejc07, ram08-bddlpss}). However, 
+%%the actual achievement of a system's goal is guaranteed only if every robot harmoniously act and cooperate~\cite{Blum2004}. T
+%the fact that a distributed robot may be composed of many units, that are not secured in a protected environment with restricted accessibility permissions, makes it appealing for an attacker to compromise some of these units so as to degrade the system's QoS or to lead it to an unsafe condition. As an example, consider a group of cars with automated pilots that are supposed to move in a highway by following driving rules to avoid collisions. By tampering a pilot, it would be possible to generate a traffic jam or make a car crash into another. The whole system may  be at risk if some of its units deviate from specification~\cite{baras07}, which makes securing cooperative physical systems a major goal.
+%
+%
+%In this paper we address the misbehavior detection problem for a class of  cooperative multi--robot systems, where the behavior of every robot depends on the presence or absence of other neighboring robots. As in a human society, misbehavior detection can not be achieved by supervision of a central authority only. It rather requires that every individual participate in monitoring its neighbors and share locally estimated ``evidences'' of their correctness, so that a globally accepted reputation of them can be established. Assessing a robot's reputation is a well--understood problem in Peer--To--Peer (P2P) systems and in Mobile Ad--hoc Networks (MANET). Uncooperative nodes not forwarding messages to their recipients, thus preventing an efficient routing service, can indeed be discouraged by e.g. the CONFIDANT protocol~\cite{buchegger2002pac}. 
+%
+%In this paper we address the misbehavior detection problem for a class of  cooperative multi--robot systems, where the behavior of every robot depends on the presence or absence of other neighboring robots. As in a human society, misbehavior detection can not be achieved by supervision of a central authority only. It rather requires that every individual participate in monitoring its neighbors and share locally estimated ``evidences'' of their correctness, so that a globally accepted reputation of them can be established. Assessing a robot's reputation is a well--understood problem in Peer--To--Peer (P2P) systems and in Mobile Ad--hoc Networks (MANET). Uncooperative nodes not forwarding messages to their recipients, thus preventing an efficient routing service, can indeed be discouraged by e.g. the CONFIDANT protocol~\cite{buchegger2002pac}. 
+%
+%To assess a robot's reputation by local observations is more complex in our context for various reasons. First, based on local sensing, a robot typically knows the set of another robot's neighbors only partially. In the highway example, some cars affecting the behavior of a target robot can be too far or hidden by other cars. The observed behavior of a robot is uncooperative if, and only if, it cannot be ``explained'' by the cooperative model for some inputs. This requires either full knowledge of the model's inputs, which is unlikely, or understanding if there exists a choice for the configurations of possible non--visible robots which explains that behavior. The latter case involves inverting the hybrid nonlinear model, which is effectively viable for specific systems only~\cite{sain2002invertibility, vu2008invertibility, millerioux2007invertibility}. To cope with this, we abstract the inversion at the level of the cooperation automaton that has finite state and input domains. Secondly, each robot's visibility and interaction topology are time--varying and unknown for a local monitoring robot. Therefore, available approaches to fault detection that are based on fixed and a--priori known event measurability~\cite{RamadgeWonham, yoo-lafortune:02, ozveren:92, fourlas:2002} cannot be applied directly. Constructing a different observer for every possible combination of visibility and interaction topology is indeed inefficient. We thus  show how they can be encoded into a unique observer that is valid also when the event uncertainty is time--varying.
+%
+%Misbehaving software robots in Computer Science, termed {\em intruders}, are discouraged in traditional settings by the implementation of an Intrusion Detection System (IDS)~\cite{security-book}. More recently, cryptography--based approaches, such as LARK~\cite{lark-dini}, have been proposed to isolate malicious robots from communication in networked embedded systems. 
+%
+Our goal is to detect misbehavior in the physical motion of robots, by means of a distributed protocol that robots can run to determine and reach a consensus on whether their neighbors are cooperative or not. Robots are {\em cyber--physical systems} that embody complex intelligent links between perception and action~\cite{Brady198579}, and thus their behavior is inherently determined by real--time physical dynamics, that give inputs to and receive outputs from their event--based supervisory systems. Not only this requires the use of a  hybrid dynamic formalism, such as the one described above, but it also makes the problem we deal with much more complex than the detection of communication misbehavior in a Mobile Ad--hoc Network (MANET) or a Peer--to--Peer (P2P) system. In this last context, the discovery of e.g. selfish agents/nodes, that not to forward incoming messages to their recipients, or malicious agents, that send corrupted information to their neighbors, can be obtained by e.g. the use of the CONFIDANT protocol~\cite{buchegger2002pac} or RCAR~\cite{Dini20121167}. 
+
+Misbehavior detection in these systems poses a number of theoretical challenges. For example, referring to the warehouse scenario, every forklift should know what and where are the neighbors of another target forklift, to use them as inputs of the cooperative model and verify if the observed actual behavior is congruent. Since some of the neighboring forklifts may be out of the observing robot's visibility region, an inversion of the hybrid nonlinear cooperative model of the target forklift would be necessary, which is possible only for specific systems~\cite{sain2002invertibility, vu2008invertibility, millerioux2007invertibility}. Moreover, the neighbors of a target forklift dynamically change as they move in the factory, and thus their interaction topology, i.e. who is is interacting with whom, may be unknown to the observing forklift. On the contrary existing approaches to fault detection require this information to be fully known a priori~\cite{RamadgeWonham, yoo-lafortune:02, ozveren:92, fourlas:2002}. Finally, forklifts need to consent on information concerning the status of the target forklift's neighborhood, which is not simply represented via real numbers or vectors. Hence available approaches based on linear consensus strategies~\cite{jadbabaie2003cgm, ieee07-murray} cannot be used. 
+
+We propose an Intrusion Detection System (IDS) that consists of a distributed  protocol which is based on two components: a local monitor and a set--valued consensus algorithm. The local {\em monitor} reconstructs the information of free and occupied regions in the neighborhood of a target robot, by estimating the events that it should have observed and applying an inversion of the cooperative model at the automaton level. The set--valued consensus algorithm allows the robots to reach consensus on the estimated free/occupied regions in the neighborhood of the target. The protocol assumes a virtuous scenario hypothesis, in which the information exchanged among robots is correct, which can be guaranteed by the use of trusted software platforms~\cite{england2003trusted}. No collusion exists between a robot executing an incorrect motion and another one trying to justify it. The problem of reaching consensus on information corrupted by intruders is a classical one~\cite{lamport82} and is not investigated here. Obviously, detecting simultaneous motion and information misbehaviors is much more complex and is left for further studies. A preliminary study on the topic was presented in~\cite{ssrr08-fagiolini}. The problem we deal is new in the sense that previous works only cope with misbehavior detection at information level, while we consider systems where misbehavior can also be at action level. The paper is based on previous work by the authors, presented in~\cite{cdc07-fagiolini, icra08-fagiolini}, and is extended here with a full formalization of the hybrid cooperative model, a formal proof of the IDS correctness, and the application to a real experimental system. Although any considered motion protocol is reasonably correct, i.e. it ensures absence of deadlocks and accidents if all robots correctly move, the proposed technique does not rely on such an assumption.
+
+% consensus protocol allows all robots to reach a unique global view of the occupancy map and therefore on the reputation of a target robot. To this aim, available solutions for network agreement typically consist of linear consensus protocols (see e.g.~\cite{
+%%olfatisaber2007cac, 
+%jadbabaie2003cgm, 
+%%Fax2004, 
+%ieee07-murray
+%%, tac04-murray
+%}), where robots exchange messages containing real scalars or vectors.
+%% that are combined together via a simple rule of the type $x(k+1) = A \, x(k)$, being $x$ the estimate vector and $A$ a proper real square matrix~\cite{ieee07-murray, tac04-murray}. 
+%These algorithms are inapplicable since monitors' outputs are continuous sets, representing regions where the presence of other robots is required, which cannot be merged --- at least trivially --- by means of linear combination rules. Other problems, such as this one, are dealt with in the literature which raise the question of how to consent on more complex data structures (see e.g.~\cite{JC-08} and our current problem). We solve it by proposing a so--called set--valued consensus algorithm. The protocol is based on the assumption of a virtuous scenario, where the exchange of information between robots is correct, which can be guaranteed by the adoption of trusted software platforms~\cite{england2003trusted}. No collusion exists between a robot executing an incorrect motion and another one trying to justify it. The problem of reaching consensus on information corrupted by intruders is a classical one~\cite{lamport82} and is not investigated here. Obviously, detecting simultaneous motion and information misbehaviors is much more complex and is left for further studies. A preliminary study on the topic was presented in~\cite{ssrr08-fagiolini}.
+%
+%What makes our approach appealing are the facts the architecture of the IDS is general and the IDS can be automatically generated once the cooperation protocol is given. 
+%The paper is based on previous works by the authors~\cite{
+%%cdc07-fagiolini, case07-fagiolini, 
+%icra08-fagiolini}, where only the fundamental ideas where presented, and is extended here with a complete formalization of the cooperative model and of the IDS. Two examples are also in depth considered to show the effectiveness of the proposed technique. The paper also presents application of the method to an experimental scenario involving real LGVs moving in a factory hangar and supposed to obey to given motion rules to avoid collisions.
+
+The paper is organized as follows. Section~\ref{sec:model} formalizes the model of a cooperative robot, Section~\ref{sec:monitor} describes the architecture of the local monitor, and Section~\ref{sec:consensus} defines the set--valued consensus protocol. Section~\ref{sec:example:highway} shows the application of the proposed method to a first example of cooperative system, consisting of a group of vehicles moving within an urban--like environment. Section~\ref{sec:example:warehouse} shows an application of the technique to a real factory's warehouse and presents experimental results. Finally, the appendix contains the proof of correctness of the local observer's estimation procedure. 
+
+\AFnewpage
+
+%
+%
+%
+
+\newpage
+
+%!TEX root = tro-ids.tex
+
+\section{A Model of Cooperation Protocols for Physical Agents}
+\label{sec:model}
+
+Consider $n$ agents, $\mathcal{A}_1, \dots, \mathcal{A}_n$, sharing a state-space, or {\em environment} $\Q$. By cooperation protocol $\P$ we mean a formal description of the agents' constitutive elements, i.e. their perceptions and actions, and of the rules used to interconnect these elements. More precisely, we  provide the following:
+%
+\begin{definition}
+\label{def:cooperation-protocol}
+A {\em cooperation protocol} $\P$ consists in the specification, for each agent $\mathcal{A}_i$, of an octuple 
+$$
+\P_i := \{ f_i, V_i, T_i, \Lambda_i, E_i, e_i, \Sigma_i, \delta_i, u_i\} \, , 
+$$
+where:
+\begin{itemize}
+\item
+$f_i : \mathcal{Q} \times \mathcal{U}_i \rightarrow T_\mathcal{Q}$ is the {\em dynamics} map of $\mathcal{A}_i$. \\ Here, $\mathcal{U}_i$ denotes the set of admissible input values and $T_\mathcal{Q}$ the space tangent to $\mathcal{Q}$. The agent's state $q_i \in \Q$ evolves from its initial state $q_i^0$ according to the ODE
+$$
+\left\lbrace
+\begin{array}{l}
+\dot{q}_i(t) = f_i(q_i(t), u_i(t)) \\
+q_i(0) = q_i^0 
+\end{array}
+\right. 
+, \, t \geq 0 \, .
+$$
+
+\item ${\vi : \Q^n \rightarrow 2^\Q}$ is the {\em visibility map} of
+  $\ai$, describing the region observed by its sensors;
+
+\item $T_i = \{\eta_{i,1}, \cdots, \eta_{i,\kappa_i}\}$ is a set of {\em topologies} on $\Q$, with ${\eta_{i,j} : \Q \rightarrow 2^\Q}$. \\ Topologies are basic to define a few further concepts: an agent's {\em neighborhood} is 
+  $ N(q_i) = \cup_{j=1}^{\kappa_i} \eta_{i,j}(q_i)$;  a {\em neighbor set} is $N_i = \{\mathcal{A}_k \, | \, q_k \in N(q_i)\}$; a {\em neighbor configuration set} is $I_i = \{ q_k \in \Q \, | \, \mathcal{A}_k \in N_i\}$. Furthermore, we define an
+  agent's {\em encoder} map as ${s_i : \Q \times \Q^{n_i} \rightarrow
+    \bool^{\kappa_i}}$, where $n_i=\mbox{card}(I_i)$ and $\bool
+  \mydefeq \{0,1\}$, whose $j$--th component, $s_{i,j}$, is a
+  logical--valued function returning $1$ if any agent is in the $j$--th topology $\eta_{i,j}(q_i)$, i.e.
+$$
+\begin{array}{rcl}
+s_{i,j} & : & \Q \times \Q^{n_i} \rightarrow \bool \\
+& & (q_i, I_i) \mapsto \sum_{q_k \in I_i} {\bf 1}_{\eta_{i,j}(q_i)}(q_k)
+\end{array}
+\, ,
+$$
+where $\sum$ represents the logical sum ({\em or}), and ${\bf 1}_A(x)$ is the Indicator function of a set $A$;
+\item
+$\Lambda_i = \{\lambda_{i,1}, \cdots, \lambda_{i,h_i}\}$ is a set of {\em constants} with ${\lambda_{i,j} : \Q \rightarrow 2^\Q}$. \\ Constants are basic to define an agent's {\em constant} map as ${r_i : \Q \rightarrow \bool^{h_i}}$, whose $j$--th component, $r_{i,j}$, is a logical--valued function returning $1$ if the agent's state belongs to the $j$--th constant $\lambda_{i,j}(q_i)$, i.e.
+$$
+\begin{array}{rcl}
+r_{i,j} & : & \Q \rightarrow \bool \\
+& & q_i \mapsto {\bf 1}_{\lambda_{i,j}(q_i)}
+\end{array}
+\, ;
+$$
+\item
+$E_i=\{e^{i,1}, \cdots, e^{i,\nu_i}\}$ is a finite {\em alphabet of events};
+\item $e_i$ is an {\em event detector} map
+$$
+\begin{array}{rcl}
+e_i & : & \bool^{\kappa_i} \times \bool^{h_i}  \rightarrow 2^{E_i} \\
+& & (s_i, r_i) \mapsto \{e^{i,j} \in E_i \, | \, c_{i,j}(s_i) = 1\} \, ,
+\end{array}
+$$
+where each detector condition $c_{i,j}$ is a logical function of the form
+\begin{equation}
+\label{eq:detector-map}
+\begin{array}{rcl}
+c_{i,j} & : & \bool^{\kappa_i} \times \bool^{h_i} \rightarrow \bool \\
+& & (s_i, r_i) \mapsto \Pi_{k \in \gamma_{i,j}} s_{i,k} \, \Pi_{k \in \rho_{i,j}} \neg s_{i,k} \, \cdot \\
+& & \;\;\; \cdot \, \Pi_{k \in \mu_{i,j}}  t_{i,k} \, \Pi_{k \in \nu_{i,j}} \neg t_{i,k} \, ,
+\end{array}
+\end{equation}
+with $\lambda_{i,1}, \cdots, \lambda_{i,h_i}$ constants in $2^\Q$,
+$\gamma_{i,j} \cup \rho_{i,j} = \{1, \cdots, \kappa_i \}$ and
+$\gamma_{i,j} \cap \rho_{i,j} = \emptyset$, $\mu_{i,j} \cup \nu_{i,j}
+= \{1, \cdots, h_i \}$ and $\mu_{i,j} \, \cap \, \nu_{i,j} =
+\emptyset$, and $\Pi$ and $\neg$ the logical product ({\em and}) and
+negation ({\em not}), respectively; 
+\item
+$\Sigma_i = \{ \sigma^{i,1}, \dots, \sigma^{i,p} \}$ is a finite {\em
+  discrete state set};
+\item
+$\delta_i : \Sigma_i \times 2^{E_i} \rightarrow \Sigma_i$ is a deterministic {\em automaton} describing how the agent's discrete state is updated, i.e.
+\begin{equation*}
+\left\lbrace
+\begin{array}{l}
+\sigma_i(t_{k+1}) = \delta_i(\sigma_i(t_{k}), e_i(t_{k+1}))  \, , \;\; t_k > 0\\
+\sigma_i(0) = \sigma_i^0 
+\end{array}
+\right. 
+\, ,
+\label{eq:model-manager}
+\end{equation*}
+where $\sigma_i^0  \in \Sigma_i$ is the initial discrete state, and $t_k$ is the $k$--th instant $t$ at which $e_i$ detects a new event;%~\cite{cassandras};
+
+\item
+$u_i : \Q \times \Sigma_i \rightarrow \mathcal{U}_i$ is a control {\em decoder} map, describing which control value is applied at different states
+  of the system, i.e.  
+$$
+u_i(t) = u_i(q_i(t), \sigma_i(t_k)) \, . \;\; \blacklozenge
+$$
+\end{itemize}
+\end{definition}
+
+According to Def.~\ref{def:cooperation-protocol}, the state of the generic {\em cooperative} agent $\ai$ is $(q_i, \sigma_i) \in \Q \times \Sigma_i$ and its temporal evolution, or {\em behavior}, is described by the dynamic system:
+$$
+\begin{array}{rcl}
+\dot{q}_i(t) & = & f_i(q_i(t), u_i(q_i(t), \sigma_i(t_k))) = \\
+& = & f^*_i(q_i(t), \sigma_i(t_k)) \, , \\
+\sigma_i(t_{k+1}) & = & \delta_i(\sigma_i(t_k), e_i(s_i(q_i(t), I_i(t)))) = \\
+& = & \delta^*_i(\sigma_i(t_k), q_i(t), I_i(t)) \, .
+\end{array}
+$$
+By introducing the $i$--th {\em hybrid dynamic map} 
+$$
+\h_i : \Q \times \Sigma_i \times \Q^{n_i} \rightarrow T_\Q \times \Sigma_i 
+$$ 
+the above system can written more concisely as
+\begin{equation}
+\label{eq:cooperative-model}
+\left\lbrace
+\begin{array}{l}
+(\dot{q}_i(t), \sigma_i(t_{k+1})) = \h_i(q_i(t), \sigma_i(t_k), I_i(t))  \, , \\
+(q_i(0), \sigma_i(0)) = (q_i^0, \sigma_i^0) \, .
+\end{array}
+\right.
+\end{equation}
+Having denoted the history $I_i(\tau)$, for $\tau=0, \cdots, t$, of $\ai$'s neighbor configuration set with $\tilde{I}_i(t)$, the agent's behavior is obtained as the solution $\phi_{\h_i}(q_i^0, \sigma_i^0, \tilde{I}_i(t))$ of the dynamic system above where $\tilde{I}_i(t)$ acts as its input. Refer to Fig.~\ref{fig:model-architecture} for a graphical representation of the dynamic model of $\ai$.
+%
+\begin{figure}[!]
+\centering
+\includegraphics[width=\columnwidth,clip]{images/architecture-agent.pdf}
+\caption{Architecture of a protocol--based cooperative physical agent.}
+\label{fig:model-architecture}
+\end{figure}
+
+In the following, we make the assumption that every agent has complete knowledge of the occupancy status of its own neighborhood through use of its own sensors, i.e.  
+$$
+N(q_i) \subseteq \vi(q_1, \cdots, q_n) \, . 
+$$ 
+
+%Finally, each agent can receive a message via communication with a
+%set of other neighboring agents specified by a {\em communication
+%map}~${\C_i : \Q^n \rightarrow \{\mathcal{A}_1, \cdots,
+%\mathcal{A}_n\}}$.
+
+%
+%
+%
+
+\newpage 
+
+\section{Observer--based Intrusion Detection Protocol - Local Monitor}
+\label{sec:monitor}
+
+Consider how an observing agent~$\ah$ can learn whether another agent~$\ai$ is cooperative or not, by measuring the trajectory $\bar{q}_i(t)$ that it has executed, over successive observation periods~$T_k=[t_k, t_{k+1})$, for $k=0, 1, \cdots$. It usually happens that $\ai$'s neighbor configuration set $I_i$ is partially unknown to $\ah$, since its neighborhood is not entirely included in $\ah$'s visibility region, i.e. 
+$$
+N(q_i) \not\subseteq \vh(q_1, \cdots, q_n) \, .
+$$ 
+
+%Indeed, consider again a scenario where a local observer onboard one car
+%is trying to learn whether another car is cooperative or not. Not having full access to the information available to the first car, it is difficult for the
+%observer to decide whether the pilot is correctly driving or if it is
+%{simulating} the presence of another car, which would be hidden to the
+%observer's view or outside of its range of visibility. 
+
+If an uncertain yet complete estimate of $I_i$ were available, $\ah$ could say that $\ai$ is cooperative when the curve $\bar{q}_i(t)$ lays within a tube around the solution of Eq.~\ref{eq:cooperative-model} with radius given by an accuracy $\varepsilon$. Our solution is a generalization of such a naive approach and consists of a local dynamic process, called {\em monitor}, which comprises a {\em hybrid observer} of $\ai$'s state $(q_i, \sigma_i)$, and an {\em occupancy estimator} of its neighbor configuration set $I_i$. During every observation period $T_k$, the local monitor receives as input the curve $\bar{q}_i(t)$ and the locally measured neighbor configuration set, 
+$$
+I_i^h=I_i \cap \vh(q_1, \cdots, q_n) \, ,
+$$
+and it returns a set--valued estimate $(\hat{q}_i, \hat\sigma_i)$ of the agent's hybrid state and and a set--valued estimate $\hat{I}_i^h$ of its neighbor configuration set.
+
+%In the following we assume that the mission state $m_i$ of the observed car is known, and thus it will be not explicitly written in the remainder of the paper.
+
+\subsection{The Hybrid Observer}
+
+Before formally describing the observer, we need to introduce the following five objects, derived from the components of the octuple~$\P_i$:
+\begin{itemize}
+%%
+\item
+A {\em topology check} map $v_i : \Q \times 2^\Q \rightarrow
+\bool^{\kappa_i}$, returning a binary vector whose $j$--th entry is $1$
+iff the $j$--th topology of $\ai$ is entirely visible from $\ah$, i.e.,
+\begin{equation*}
+\begin{array}{rcl}
+v_{i,j} & : & \Q \times 2^\Q \rightarrow \bool \\
+& & (q_i, V_h) \mapsto
+\left\lbrace
+\begin{array}{cc}
+1 & \mbox{ if } \eta_{i,j}(q_i) \subseteq V_h \\
+0 & \mbox{ otherwise} 
+\end{array}
+\right.
+\, ;
+\end{array}
+\end{equation*}
+%%
+\item
+A {\em restricted encoder} map $\tilde{s}_i : \Q \times \Q^{\hat{n}_i}
+\rightarrow \bool^{\kappa_i}$, with $\hat{n}_i=\mbox{card}(I_i^h)$,
+s.t. its $j$--th entry is a lower approximation of $s_{i,j}$ based on
+the locally available information of $I_i$:
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{s}_{i,j} & : & \Q \times \Q^{\hat{n}_i} \rightarrow \bool \\
+& & (q_i, I_i^h) \rightarrow \sum_{q_k \in I_i^h} {\bf 1}_{\eta_{i,j}(q_i)}(q_k)
+\end{array}
+\, 
+\end{equation*}
+(note that $\tilde{s}_{i,j}(q_i, I_i^h) \leq s_{i,j}(q_i, I_i)$ since $I_i^h \subseteq I_i$);
+%%
+\item An {\em event estimator} map~$\tilde{e}_i : \bool^{\kappa_i} \times \bool^{\kappa_i} \rightarrow 2^{E_i}$ s.t. $\tilde{e}_i(\hat{s}_i, v_i)$ is an upper approximation of 
+%the event detector output 
+$e_i(s_i)$;
+\item 
+A nondeterministic {\em automaton}
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{\delta}_i  & : & 2^{\Sigma_i} \times 2^{E_i} \rightarrow 2^{\Sigma_i} \\
+& & (\hat{\sigma}_i, \hat{e}_i) \rightarrow \{\bar{\sigma} \in \Sigma_i \, | \, \exists \, \sigma \in \Sigma_i, \sigma \subseteq \hat{\sigma}_i \, | \\
+& & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; | \, \delta_i(\sigma, \hat{e}_i) = \bar{\sigma} \} \, ,
+\end{array}
+\end{equation*}
+describing how the estimated discrete state~$\hat{\sigma}_i$ is updated starting from an initial estimate $\hat\sigma_i^0$, i.e.
+$$
+\left\lbrace
+\begin{array}{l}
+\hat{\sigma}_i(t_{k+1}) = \tilde{\delta}_i(\hat{\sigma}_i(t_k), \hat{e}_i(t_{k+1})) \\
+\hat{\sigma}_i(0) = \hat\sigma_i^0
+\end{array}
+\right. 
+\, ;
+\label{eq:model-manager}
+$$
+%%
+\item
+A {\em controlled dynamics} map
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{f}^*_i & : & 2^\mathcal{Q} \times 2^{E_i} \rightarrow 2^{T_\mathcal{Q}} \\
+& & (\hat{q}_i, \hat{\sigma}_i) \mapsto \{\dot{q} \in T_\mathcal{Q} \, | \, \exists \, \bar{q} \in \Q , \bar{q} \subseteq \hat{q}_i \,  , \\
+& & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\; \exists \, \bar{\sigma} \in \Sigma_i \, , \, \bar{\sigma} \subseteq \hat{\sigma}_i \, | \, f^*_i(\bar{q}, \bar{\sigma}) = \dot{q} \} \, ,
+\end{array}
+\end{equation*}
+describing how the estimated state $\hat{q}_i$ is updated starting from an initial estimate $\hat{q}_i^0$, i.e.
+$$
+\left\lbrace
+\begin{array}{l}
+\dot{\hat{q}}_i(t) = \tilde{f}^*_i(\hat{q}_i(t), \hat{\sigma}_i(t_k)) \\
+\hat{q}_i(0) = \hat{q}_i^0 
+\end{array}
+\right. 
+\, .
+$$
+%%
+\end{itemize}
+
+Given the history $\tilde{I}_i^h(t)$ of the neighbor configuration set of~$\ai$ measured by $\ah$, all $\ai$'s {\em admissible cooperative behaviors}, i.e. the set of all temporal evolutions $(\hat{q}_i(t), \hat\sigma_i(t_k))$ that simultaneously complies with $\P_i$ and $\tilde{I}_i^h(t)$, are described by the set--valued dynamic system:
+$$
+\begin{array}{rcl}
+\dot{\hat{q}}_i(t) & = & \tilde{f}^*_i(\hat{q}_i(t), \hat{\sigma}_i(t_k)) \, , \\
+\hat{\sigma}_i(t_{k+1})  & = & \tilde{\delta}_i(\hat{\sigma}_i(t_k), \tilde{e}_i(\hat{s}_i(t_{k+1}), \hat{v}_i(t_{k+1}))) = \\
+& = & \tilde{\delta}^*_i(\hat{\sigma}_i(t_k), \bar{q}_i(t), I_i^h(t)) \, , 
+\end{array}
+$$
+where 
+$$
+\begin{array}{l}
+\hat{v}_i(t_k) = v_i(\bar{q}_i(t_k), \vh(q_1(t), \cdots, q_n(t))) \, , \\
+\hat{s}_i(t_k) = \tilde{s}_i(\bar{q}_i(t_k), I_i^h(t_k)) \, .
+\end{array}
+$$
+%By introducing the $i$--th nondeterministic hybrid map
+%$$
+%\htilde_i : 2^\Q \times 2^{\Sigma_i} \times \Q^{\hat{n}_i} \rightarrow 2^{T_\Q} \times 2^{\Sigma_i} 
+%$$
+%the above system can be rewritten more concisely as
+%$$
+%\left\lbrace
+%\begin{array}{l}
+%(\dot{\hat{q}}_i(t), \hat{\sigma}_i(t_{k+1})) = \htilde_i(\hat{q}_i(t), \hat{\sigma}_i(t_k), I_i^h(t))  \, , \\
+%(\hat{q}_i(0), \hat{\sigma}_i(0)) = (\hat{q}_i^0, \hat{\sigma}_i^0) \, .
+%\end{array}
+%\right.
+%$$
+
+In deriving the above model, the introduction of the topology check map $v_i$ and the event estimator map $\tilde{e}_i$ is critical to ensure that no admissible behavior is possibly discarded. Clearly, the crucial step to obtain an effective observer is the event estimator map~$\tilde{e}_i$, which should provide as tight an approximation as possible. To this purpose, the following result (whose proof is reported in Appendix~\ref{sec:proofs}) is instrumental:
+\begin{theorem}
+\label{th:smallest-estimator}
+The smallest event estimator compatible with an available topology
+check map $v_i$ and a reduced encoder map $\hat{s}_i$ is given by 
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{e}_i & : & \bool^{\kappa_i} \rightarrow 2^{E_i} \\
+& & \hat{s}_i \mapsto \{e^{i,j} \in E_i \, | \, \tilde{c}_{i,j}(\hat{s}_i, v_i) = 1\} \, ,
+\end{array}
+\end{equation*}
+with
+ \begin{equation}
+\label{eq:monitor:detector-map}
+\begin{array}{rcl}
+\tilde{c}_{i,j} & : & \bool^{\kappa_i} \times \bool^{\kappa_i} \rightarrow \bool \\
+& & (\hat{s}_i, v_i) \rightarrow \Pi_{k \in \gamma_{i,j}} \left(\hat{s}_{i,k} v_{i,k}+\neg v_{i,k}\right) \cdot \\
+& & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; \cdot \; \Pi_{k \in \rho_{i,j}} \neg \hat{s}_{i,k} \, \cdot \\
+& & \;\;\;\;\;\;\;\;\,\;\;\;\;\;\; \cdot \, \Pi_{k \in \mu_{i,j}} \lambda_{i,k} \; \Pi_{k \in \tau_{i,j}} \neg \lambda_{i,k}
+\, ;
+\end{array}
+\end{equation}
+\end{theorem}
+
+We are now ready to describe the hybrid observer, whose execution consists of two distinct phases, {\em predict} and {\em update} (Fig.~\ref{fig:ids:monitor:phases}).
+%%
+\begin{figure}[!]
+\centering
+\includegraphics[width=0.46\textwidth,clip]{images/monitor-phases.pdf}
+\caption{Operation phases of the hybrid observer in the local monitor.}
+\label{fig:ids:monitor:phases}
+\end{figure}
+%%
+
+\subsubsection{Predict Phase} 
+
+During this phase, $\ah$ computes a set--valued a--priori estimate $(\hat{q}_i(t|t_k), \hat{\sigma}_i(t_k|t_k))$ of $\ai$'s behavior, based on the previously available estimate and the currently measured $I_i^h$.
+
+At the very first execution ($k=0$), the most conservative estimate is assumed: $\hat{q}_i(t_0 | t_0) = \bar{q}_i(t_0)$ and $\hat{\sigma}_i(t_{-1}|t_{0})=\Sigma_i$. For all successive executions, the propagation law is
+$$
+\begin{array}{rcl}
+\hat{q}_i(t|t_{k}) & = & \phi_{\tilde{f}_i^*}(\hat{q}_i(t_{k}|t_k), \hat{\sigma}_i(t_{k} | t_{k}), \tilde{I}_i^h(t)) \, , \\
+\hat{\sigma}_i(t_k|t_k)  & = & \tilde{\delta}_i(\hat{\sigma}_i(t_{k-1}|t_k), \tilde{e}_i(\hat{s}_i(t_k | t_k), \hat{v}_i(t_k))) \, ,
+\end{array}
+$$ 
+for $t \geq t_k$, where $\hat{s}_i(t_{k}|t_{k}) = \tilde{s}_i(\bar{q}_i(t_{k}), I_i^h(t_{k})) $ is an a--priori estimate of the topology activation, and $\tilde{I}_i^h(t)$ is the history of $I_i^h$ from $t_k$ to $t$.
+%The predict rule can be written as
+%$$
+%\begin{array}{l}
+%(\hat{q}_i(t|t_{k}), \hat{\sigma}_i(t_k|t_{k})) = \phi_{\htilde_i}(\hat{q}_i(t_{k}|t_k), \hat{\sigma}_i(t_{k-1} | t_{k}), \tilde{I}_i^h(t)) \, . \\
+%\end{array}
+%$$
+
+Moreover, to avoid explicit model inversion during the following update phase
+(which is impractical for general systems), the following set describing the ``relationship'' between predicted configuration trajectories and discrete states is computed and maintained as
+\begin{equation*}
+\begin{array}{l}
+L(t_k) = \hat{q}_i(t|t_{k}) \bowtie_{\tilde{f}_i^*} \hat{\sigma}_i(t_{k}|t_{k}) \, , \\
+\end{array}
+\end{equation*}
+where the operator $\bowtie_{\tilde{f}^*_i}$ is defined as 
+\begin{equation*}
+\begin{array}{rcl}
+\bowtie_{\tilde{f}^*_i} & : & 2^Q \times 2^{\Sigma_i} \rightarrow 2^{\Q \times \Sigma_i} \\
+& & (\hat{q}_i(t), \hat{\sigma}_i) \mapsto \{(q(t), \sigma) \, | \, q(t) \subseteq \phi_{\tilde{f}^*_i}(\hat{q}_i(t_{k}), \sigma) \}
+\, .
+\end{array}
+\end{equation*}
+It is worth noting that the set $L(t_k)$ does not raise any computation or representation issues, as it simply requires bidirectional pointers connecting every element of the finite set $\hat{\sigma}_i(t_{k}|t_{k})$ with the corresponding curve $\hat{q}_i(t|t_{k})$, computed by direct integration of the model.
+
+\subsubsection{Update Phase} 
+
+At the end of the observation period, $\ah$ computes a set--valued a--posteriori estimate of $\ai$'s state, by combining the a--priori estimate with newly measured curve $\bar{q}_i(t)$ of $\ai$'s state. The update step is given by
+$$
+\begin{array}{l}
+\hat{q}_i(t_{k+1}|t_{k+1}) = \bar{q}_i(t_{k+1}) \, , \\
+\hat{\sigma}_i(t_{k}|t_{k+1}) = \pi_{\Sigma_i} (L(t_k) \bowtie_\epsilon \bar{q}_i(t) ) \, , 
+\end{array}
+$$
+where $\pi_A$ is the projector over the set $A$, and $\bowtie_\epsilon$ is an operator defined as
+\begin{equation*}
+\begin{array}{rcl}
+\bowtie_\epsilon & : & 2^{Q \times \Sigma_i} \times \Q  \rightarrow 2^{\Q \times \Sigma_i} \\
+& & (L, \bar{q}_i(t)) \mapsto \{(q(t), \sigma) \in L \, | \, ||q(t)-\bar{q}_i(t)|| \leq \epsilon \} \, .
+\end{array}
+\end{equation*}
+Intuitively, the operator  drops out all behaviors where $\ai$'s state $q_i$ gets too far from the observation. Here, $\epsilon$ is a tolerance parameter, to be set depending on the accuracy of available sensors and nominal models.
+
+Furthermore, an a--posteriori estimate of the encoder map outputs is obtained as follows:
+$$
+\begin{array}{l}
+\hat{s}_i(t_{k}|t_{k+1}) = \{s^* \in \bool^{\kappa_i} \, | \, s^* \geq \hat{s}_i(t_{k}|t_{k}) \, , \\ 
+\;\;\;\;\;\;\;\;\; \, e_i(s^*) \subseteq \hat{\sigma}_i(t_{k}|t_{k}) \bowtie_{\tilde{\delta}_i} \hat{\sigma}_i(t_{k}|t_{k+1})
+\, ,
+\end{array}
+$$
+where
+$$
+\begin{array}{rcl}
+\bowtie_{\tilde{\delta}_i} & : & 2^{\Sigma_i} \times 2^{\Sigma_i} \rightarrow 2^{E_i} \\
+& & (\hat{\sigma}_i, \hat{\sigma}_i^+) \mapsto \{  \hat{e}_i \in E_i \, | \, \exists \, \bar{\sigma}, \bar\sigma^+ \in \Sigma_i, \\ 
+& & \;\;\;\;\;\;\;\;\;\; \bar\sigma \subseteq \hat{\sigma}_i, \bar\sigma^+ \subseteq \hat{\sigma}_i^+ , \,  \bar\sigma^+ \subseteq \tilde{\delta}_i(\bar\sigma, e) \}
+\, .
+\end{array}
+$$
+
+\subsection{Occupancy Estimator}
+
+The output of the local occupancy estimator is a conservative estimate $\hat{I}_i^h(t_k)$ of the neighbor configuration set $I_i$ during the current observation period. Intuitively, this is obtained by splitting each $s_{i,j}$ as the sum of a term $\tilde{s}_{i,j}$ (the value of the restricted encoder map) that depends only on quantities that are known to $\ah$ and a term $p_{i,j}$ that is unknown and must be estimated:
+$$
+s_{i,j}(q_i, I_i) = \tilde{s}_{i,j}(q_i, I_i^h)  + p_{i,j}(q_i, I_i) \, , 
+$$
+where
+$$
+\begin{array}{c}
+p_{i,j} (q_i, I_i) = \sum_{q_j \in I_i \setminus V_h} {\bf 1}_{\eta_{i,j}(q_i)}(q_j) \, .
+\end{array}
+$$
+The computation of this last term involves information related to the portion of the $j$--th topology $\eta_{i,j}$ that is out of $\ah$'s visibility region. Its value can be inferred by a simple logics that compare the a--priori and a--posteriori estimates of the encoder map. If e.g. the a--priori value $\hat{s}_i(t_k|t_k)$ equals $0$ and the a--posteriori one $\hat{s}_i(t_k|t_{k+1})$ equals $1$, then an agent must lay in the portion of $\eta_{i,j}$ that is out of visibility. In that case, an estimate of the region where the hidden agent lays is obtained by subtracting $\ah$'s visibility region from the topology $\eta_{i,j}$.
+
+This intuition is formalized as follows. A conservative yet optimal (in virtue of Theorem~\ref{th:smallest-estimator}) estimate of $\ai$'s neighbor configuration set $I_i$ is obtained through the map
+$$
+\begin{array}{rcl}
+\hat{I}_i^h & : & 2^\Q \times 2^\Q \times 2^{\bool^{\kappa_i}} \rightarrow  2^{2^\Q} \\
+& & (\bar{I}_i^h, V_h, \hat{p}_i) \mapsto \\
+& & \;\;\;\;\;\;\;\;\;\; \{ (\hat{\eta}_{i,1}(\bar{I}_i^h, V_h, p_{i,1}) , \cdots, \hat{\eta}_{i,\kappa_i}(\bar{I}_i^h, V_h, p_{i,\kappa_i}) \, \\
+& & \;\;\;\;\;\;\;\;\;\;\;\; | \, p = (p_{i,1}, \cdots, p_{i,\kappa_i}) \in \bool^{\kappa_i}, \, p \subseteq \hat{p}_i \} \, 
+\, , 
+\end{array}
+$$
+where
+\begin{itemize}
+%
+\item
+the estimated occupancy of the $j$--th topology is  
+$$
+\begin{array}{rcl}
+\hat{\eta}_{i,j} & : & 2^\Q \times 2^\Q \times \bool \rightarrow  2^\Q \\
+& & (\bar{I}_i^h, V_h, 0) \mapsto \bar{I}_i^h \cap \eta_{i,j}(q_i) \, , \\
+& & (\bar{I}_i^h, V_h, 1) \mapsto (\bar{I}_i^h \cap \eta_{i,j}(q_i)) \cup (\eta_{i,j}(q_i) \setminus V_h) \, ;
+\end{array}
+$$
+%
+\item
+the estimate of the unknown term is obtained as 
+$$
+\hat{p}_i = \tilde{p}_i(\hat{s}_i(t_k|t_k), \hat{s}_i(t_k|t_{k+1}) \, , 
+$$
+where $\tilde{p}_i : \bool^{\kappa_i} \times
+2^{\bool^{\kappa_i}} \rightarrow 2^{\bool^{\kappa_i}}$ is s.t. its $j$--th component is
+$$
+\begin{array}{rcl}
+\tilde{p}_{i,j} & : & \bool \times 2^\bool \rightarrow 2^{\bool}  \\
+& & (0, 0) \mapsto 0 \, , \; (0, 1) \mapsto 1 \, \\
+& & (0, \{0,1\}), (1, 1) \mapsto \{0, 1\} \, .
+\end{array}
+$$
+(Note that $\tilde{p}_{i,j}$ is undefined for the inputs $(1,0)$, $(1, \{0, 1\})$ as the a--posteriori estimates of $s_{i,j}$ are obviously greater than the a--priori ones);
+%
+%
+\item $\bar{I}_i^h$ is an over--approximation of $\ah$'s measures taking into account of its sensor inaccuracy, i.e. 
+$$
+\bar{I}_i^h = \{ \hat{q}_k \in 2^\Q\, | \, \hat{q}_k = B_\epsilon(q_k) \mbox{ for some } q_k \in I_i^h \} \, ,
+$$
+where $B_\epsilon(q_k)$ is a ball with radius $\epsilon$ and center at $q_k$;
+%
+\item $V_h$ is the current visibility region of $\ah$.
+%
+\end{itemize}
+
+%%
+%%
+%%
+
+\section{Set--valued Consensus Protocol for Monitor Agreement}
+\label{sec:consensus}
+
+Consider $m_i$ observing agents, $\mathcal{A}_{i_1}, \cdots, \mathcal{A}_{i_{m_i}}$, trying to reach an agreed decision on the cooperativeness of a common neighbor~$\ai$. Here we assume that agents are connected through a communication topology, described by an {\em undirected} graph~$G(V_G, E_G)$, where $V_G$ is a node set representing the agents and $E_G$ is an edge set representing agents that are within communication range. Recall that a graph is undirected when the fact that $\ah$ can send a message to $\ak$, implies also the reverse. We also assume that they exchange correct information, whether or not they move according to the motion protocol $\P_i$. We show here how the observing agents can construct a unique global estimate $I_i^*$ of the occupancy map~$I_i$ only through one--hop message exchange.
+
+As already stated in the introduction, off--the--shelf solutions for network agreement are inadequate to our context, as they typically work on data represented by real numbers or vectors and use very simple combination rules. As the outputs of local monitors are continuous sets, we need to attack the consensus problem from a more general perspective. In this vein, we consider that the consensus  domain is $\Q$ and that each agent participating in the estimation process has a set--valued state $X_h \in 2^\Q$, for $h=1, \cdots, m_i$. We also assume that a generic {\em merging function} ${F : 2^\Q \times 2^\Q \rightarrow 2^\Q}$ is intended to be used to combine any two states $X_h, X_k$ of two different agents into a new state value $F(X_h, X_k)$. A composed merging function can be introduced as
+$$
+\begin{array}{rcl}
+F^{(l)} & : & {2^\Q}^l \rightarrow 2^\Q \\
+& & (X_1, \cdots, X_l) \mapsto F(\cdots F(X_1, X_2) \cdots, X_l)
+\, .
+\end{array}
+$$
+A hypothetical centralized process having full knowledge of all agents' initial estimates would be able to compute in one step the following estimate
+\begin{equation}
+\label{eq:centralized-estimation}
+X^* = F^{(m_i)}(X_1(0), \cdots, X_{m_i}(0)) \, .
+\end{equation}
+If $F$ is both {\em commutative}, i.e., $F(X_1, X_2) = F(X_2, X_1)$ for all $X_1,X_2$, and {\em associative}, i.e., $F(X_1, F(X_2, X_3)) = F(F(X_1, X_2), X_3)$ for all $X_1,X_2,X_3$, the set--valued estimate $X^*$ is well--defined, since it is independent of the order by which the estimates are processed. 
+We also require that $F$ be {\em idempotent} if $F(X_1, X_1) = X_1$ for all $X_1$. Moreover, let $CV_h(p)$ be the set of agents that can transmit a message to $\ah$ by passing through at most $p-1$ other agents, i.e. $CV_h(p) = \{ j \in V_G \ | \ \dist(i,j) \, \leq \, p \}$, where $\dist(h,k)$ is the so--called geodesic distance of $\ah$ from $\ak$, i.e. the shortest path length between the two agents. Recall the notion of graph diameter being the maximum distance between any two nodes in the graph, i.e. $\diam(G)=\max_{i,j \in V_G} \dist(i, j)$. 
+
+We are now ready to prove the following result, which has a theoretical importance going beyond the scope of this paper, and involving the convergence of a class of set--valued consensus protocol systems: 
+\begin{theorem}[Set--Valued Consensus Protocol]
+\label{th:consensus}
+A collection of $m_i$ agents running a consensus protocol described by the dynamic system
+$$
+\left\lbrace
+\begin{array}{rcl}
+X_h(k+1) & = & F^{(p_h(1))}(X_{h,1}(k), \cdots, X_{h, p_h(1)}(k)) \, , \\
+X_h(0) & = & U_h \, ,
+\end{array}
+\right.
+$$
+where $p_h(k) = \mbox{card}(CV_h(k))$, for all agents $h$, converges to the centralized consensus state in at most $\tilde{n}=\diam(G)$ steps, i.e.,
+$$
+X(\tilde{n}) = {\bf 1}_{m_i} \, X^* \, ,
+$$
+if $F$ is commutative, associative, and idempotent, and if the communication graph~$G$ is connected.
+\begin{proof}
+Let us first prove, by induction, that the consensus state of an agent~$\ah$ after $k$ consensus steps is
+$$
+X_h(k) = F^{(p_h(k))}(X_{h,1}(0), \cdots, X_{h,p_h(k)}(0)) \, .
+$$
+The property is trivially satisfied after one consensus step:
+$$
+X_h(1) = F^{(p_h(1))}(X_{h,1}(0), \cdots, X_{h,p_h(1)}(0)) \, .
+$$ 
+By assuming that the property holds after $k$ steps, we want to prove its satisfaction after the $(k+1)$--th step. We have:
+\begin{equation}
+\label{eq:another-equation}
+X_h(k+1) = F^{(p_h(1))}(J_1(k), \cdots, J_{p_h(1)}(k)) \, ,
+\end{equation}
+where $J_i(k) = F^{(p_i(k))}(X_{i,1}(0), \cdots, X_{i,p_i(k)}(0))$ by the inductive hypothesis. Moreover, note that the order by which every estimate is processed is irrelevant, thanks to $F$'s associativity and commutativity, and that multiple occurrence of the same estimate $X_{i,j}(0)$ can be simplified through $F$'s idempotency. Eq.~\ref{eq:another-equation} involves the states of all agents $l \in CV_j(k)$ where $j \in CV_h(1)$, whose union gives by definition $CV_h(k+1)$, the set of agents that can send a message to $\ah$ via a communication path of at most $k+1$ other agents, which proves the property. To finally prove the theorem, it is sufficient to note that, for all $k \geq \tilde{n}$, $CV_h(k) = V_G$ and hence $p_h(k)=m_i$, as the communication graph $G$ is connected. Therefore, we have
+\begin{equation*}
+\begin{array}{rcl}
+X_h(k) & = & F^{(p_h(\tilde{n}))}(X_{h,1}(0), \cdots, X_{h,p_h(\tilde{n})}(0)) =
+\\
+& = & F^{(m_i)}(U_1 \, \cdots, U_{m_i}) = X^* \, ,
+\end{array}
+\end{equation*}
+for all $h$ and all $k \geq \tilde{n}$, which concludes the proof.
+\end{proof} 
+\end{theorem}
+
+We can now move to the main implication of Theorem~\ref{th:consensus} as for what it concerns our intrusion detection problem. A hypothetical {\em centralized observer} receiving all $m_i$ estimates would be able to compute in a single step the following merged estimate
+$$
+I_i^c = \hat{I}_i^{(i_1)} \, \cap \, \hat{I}_i^{(i_2)} \, \cap \, \cdots \, \cap \, \hat{I}_i^{(i_{m_i})} \, ,
+$$ 
+where $\cap$ is the set--theoretic intersection. Moreover, we can also state the following:
+\begin{corollary}[Monitor Agreement Protocol]
+A set--valued consensus protocol where 
+\begin{itemize}
+\item
+the communication graph $G$ is connected, 
+\item
+the generic consensus state $X_h$ is initialized with the locally estimated occupancy map, i.e. 
+$$
+U_h = \hat{I}_i^h(t_k|t_{k+1}) \, , \mbox{ and}
+$$
+\item
+$F^{(p_h(1))}$ is defined through the merging function
+$$
+\begin{array}{rcl}
+\cap^* & : & 2^\Q  \times 2^\Q  \rightarrow 2^\Q  \\
+& & (X_1, X_2) \mapsto \{ x \, | \, \exists \, x_1 \in X_1 \setminus \emptyset, x_2 \in X_2 \setminus \emptyset \, | \, \\
+& & \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; x = x_1 \cap x_2 \}
+\, ,
+\end{array}
+$$
+\end{itemize}
+converges in finite time to a consensus state $X^*={\bf 1_{m_i}} \, I_i^*$ with $I_i^* = I_i^c$.
+
+Moreover, the very same decision on $\ai$'s cooperativeness computed by the centralized observer is reached in finite time by all agents.
+\begin{proof}
+The operator $\cap^*$ satisfies the hypotheses of Theorem~\ref{th:consensus}.
+\end{proof}
+\end{corollary}
+
+%
+%
+%
+
+\input{the-highway}
+
+%
+%
+%
+
+
+\section{Application to a Real Industrial Automated Warehouse}
+\label{sec:example:warehouse}
+
+We now move on to a second example consisting of a factory's warehouse, where $n$ autonomous forklifts are used to move products from carrier tapes to storage piles. The example is related to a real industrial automated system, yet it allows us to explicitly show the construction of a local monitor and its operation while detecting the noncooperation of a forklift due to a failure in its encoder.
+
+The warehouse system is composed of a matrix of cells and macro-cells. {\em Cells} are square regions that can be exclusively occupied by a single forklift to prevent collisions, and {\em macro-cells} are sequence of cells, representing e.g. corridors or narrow paths, whose access from the forklifts needs to be exclusively handled to prevent deadlocks. Forklifts are assigned with {\em paths}, being sequences of adjacent cells or macro-cells, that may intersect. Forklifts are required to travel at a maximum speed $v_{max}$, if the current cell or macro--cell is free, or decelerate if another forklift is approaching  from a path on its right. To detect neighbors forklifts are provided with $360$--degree cameras with visibility range $R_i$. 
+
+For the sake of clarity, consider the scenario in Fig.~\ref{fig:sofidel-example} including five forklifts that must solve conflicts at cell and macro--cell levels. At cell level, forklifts $00$ and $01$ need to  negotiate the access to the cells $123$ and $125$, forklifts $01$ and $02$ need to negotiate the access to the cell $124$; forklifts $01$ and $04$ need to negotiate the access to the cell $125$; at macro--cell level, forklifts $00$ and $04$ need to negotiate the access to the macro--cell $\{125, 165, 205\}$.
+%
+\begin{figure*}[!]
+\centering
+\fbox{\includegraphics[width=0.31\textwidth,clip]{images/regood1.png}}
+\fbox{\includegraphics[width=0.31\textwidth,clip]{images/regood3.png}}
+\fbox{\includegraphics[width=0.31\textwidth,clip]{images/regood6.png}}
+\caption{Snapshots from the simulation of five forklifts that cooperatively plan their motions to avoid collisions and deadlocks.}
+\label{fig:sofidel-example}
+\end{figure*}
+
+In the following we describe the cooperation protocol of the warehouse's example, and we exemplify the construction of the local monitor and of its operation. We also present results from experiments in a real factory hangar where $3$ forklifts follow the above protocol and use the distributed IDS to discover one forklift's noncooperation.
+
+\subsection{The Warehouse Protocol}
+
+The system's cooperation protocol $\mathcal{P}$ can be described as
+follows. The environment is $\Q = R^2 \times SO(2) \times R$. An agent
+state is $q_i = (x_i, y_i, \theta_i, v_i)$ and, based on its
+input $u_i=(a_i, \omega_i)$, is updated through the dynamic map
+\begin{equation*}
+\label{eq:example:dynamics}
+\begin{array}{rcl}
+f_i & : & \mathcal{Q} \times \mathcal{U}_i \rightarrow T_\mathcal{Q} \\
+& & (q_i, u_i) \mapsto \left(v_i \cos \theta_i, \, v_i \sin \theta_i, \,\omega_i , \, a_i \right)^T
+\end{array} \, ,
+\end{equation*}
+%% where $\mathcal{U}_i = R^2$ and $T_\mathcal{Q} = R^4$. 
+The topology set is 
+\begin{equation*}
+\begin{array}{rcl}
+\eta_{i,1} & : & \Q \rightarrow 2^\Q \\
+& & q_i \mapsto \left\lbrace (x,y,\theta, v) \in \Q \, | \, (x-x_i)^2+(y-y_i)^2 \leq d_i, \right. \\
+& & \;\;\;\; \left. -\frac{\pi}{2}  \leq \arctan\left(\frac{y-y_i}{x-x_i}\right)-\theta_i \leq \frac{\pi}{4} \right\rbrace
+\end{array}
+\end{equation*}
+where $d_i$ is a safety distance, and the corresponding encoder map is $s_i = s_{i,1}$ ($\kappa_i=1$) with 
+\begin{equation*}
+\begin{array}{rcl}
+s_{i,1} & : & \Q \times \Q^{n_i} \rightarrow \bool \\
+& & (q_i, I_i) \mapsto \sum_{q_k \in I_i} {\bf 1}_{\eta_{i,1}(q_i)}(q_k) \, . 
+\end{array}
+\end{equation*}
+Thus, the agent's neighborhood is $N(q_i) = \eta_{i,1}(q_i)$. The event alphabet is $E_i = \{e^{i,1}, e^{i,2}\}$ and the detector map $e_i \in \bool \rightarrow 2^{E_i}$, with $2^{E_i} = \{\emptyset, e^{i,1}, e^{i,2}, \{e^{i,1}, e^{i,2}\}\}$, is characterized by
+the event conditions ${c_{i,1}, c_{i,2} : \bool \rightarrow \bool}$,
+with $\gamma_{i,1} = \emptyset$, $\rho_{i,1} = \{1\}$, $\mu_{i,1} =
+\nu_{i,1} = \emptyset$, $\gamma_{i,2} = \{1\}, \rho_{i,2} = \mu_{i,1}
+= \nu_{i,1} = \emptyset$ ($\lambda_{i,j}$ need not be defined), i.e., 
+\begin{equation*}
+\begin{array}{rcl}
+c_{i,1} = \neg s_{i,1} \, , \;\;\; c_{i,2} = s_{i,1} \, , 
+\end{array}
+\end{equation*}
+and thus
+\begin{equation*}
+\begin{array}{rcl}
+e_i & : & \bool \rightarrow 2^{E_i} \\
+& & 0 \mapsto \{ e^{i,1} \} \, , \;\;  1 \mapsto \{ e^{i,2} \} \, .
+\end{array}
+\end{equation*}
+The finite set of discrete states is $\Sigma_i=\{ \macc, \mdec \}$ ($p=2$) and the automaton's dynamics is 
+\begin{equation*}
+\begin{array}{rcl}
+\delta_i & : & \Sigma_i \times 2^{E_i} \rightarrow \Sigma_i  \\
+& & (\macc, e^{i,1}) \mapsto \macc \, , \\
+& & (\macc, e^{i,2}) \mapsto \mdec \, , \\
+& & (\mdec, e^{i,1}) \mapsto \macc \, , \\
+& & (\mdec, e^{i,2}) \mapsto \mdec \, ,
+\end{array}
+\end{equation*}
+with initial state $\sigma_i^0 = \mdec$. The decoder map is 
+\begin{equation*}
+\begin{array}{rcl}
+u_i  & : & \Q \times \Sigma_i \rightarrow \mathcal{U}_i \\
+& & (q_i, \macc) \mapsto 
+\left( - \mu (v_i - v_{max}), 0 \right)^T \, , \\
+& & (q_i, \mdec) \mapsto 
+\left( - \mu \, v_i, 0 \right)^T \, ,
+\end{array}
+\end{equation*}
+where $\mu$ is a positive constant, which implies that the configuration $q_i$ evolves according to the controlled  dynamic map
+\begin{equation*}
+\begin{array}{rcl}
+f^*_i & : & \mathcal{Q} \times \Sigma_i \rightarrow T_\mathcal{Q} \\
+& & (q_i, \macc) \mapsto 
+\left(v_i \cos \theta_i, \, v_i \sin \theta_i, \, 0 , \, - \mu (v_i - v_{max}) \right)  \, , \\
+& & (q_i, \mdec) \mapsto 
+\left(v_i \cos \theta_i, \, v_i \sin \theta_i, \, 0 , \, - \mu \, v_i \right)  \, .
+\end{array} 
+\end{equation*}
+The solution $q_i(t) = \phi_{f_i^*}(q_i(t_k), \sigma_i(t_k))$, for $t \geq t_k$, of the controlled dynamics is
+\begin{equation}
+\label{eq:example:solution}
+\left\lbrace
+\begin{array}{rcl}
+x_i(t) & = & x_i(t_k) + \Delta(\sigma_i(t_k), t) \cos \left(\theta_i(0)\right) \, , \\
+y_i(t) & = &  y_i(t_k) + \Delta(\sigma_i(t_k), t) \sin \left(\theta_i(0)\right) \, , \\
+\theta_i(t)  & = & \theta_i(0) \, , \\
+v_i(t) & = & V(\sigma_i(t_k), t) + v_i(t_k) \, e^{-\mu(t-t_k)} \, ,
+\end{array}
+\right.
+\end{equation}
+with 
+$$
+\begin{array}{c}
+\Delta(\macc, t) = v_{max} \left( t - t_k \right) + \frac{v_i(t_k)-v_{max}}{\mu} \left( 1-e^{-\mu(t-t_k)} \right) \, , \\
+\Delta(\mdec, t) = \frac{v_i(t_k)}{\mu} \left( 1-e^{-\mu(t-t_k)} \right) \, , \\
+V(\macc, t) = v_{max} \left( 1-e^{-\mu(t-t_k)} \right) \, , \; V(\mdec, t) = 0 \, .
+\end{array}
+$$ 
+Finally, the visibility map is 
+\begin{equation*}
+\begin{array}{rcl}
+\mathcal{V}_i & : & \Q^n \rightarrow 2^\Q \\
+& & (q_1, \cdots, q_n) \mapsto \{ q \in \Q \, | \, (x-x_i)^2 + (y-y_i)^2 \leq R_i \}
+\, ,
+\end{array}
+\end{equation*}
+with $R_i > d_i$.  
+
+\subsection{Monitor Construction}
+
+Consider a forklift~$\ah$ trying to learn whether another forklift~$\ai$ is cooperative or not. The corresponding monitor is constructed as follows. The topology visibility map is $v_i=(v_{i,1})$, with
+\begin{equation*}
+\begin{array}{rcl}
+v_{i,1} & : & \Q \times 2^\Q \rightarrow \bool \\
+& & (q_i, V_h) \mapsto
+\left\lbrace
+\begin{array}{cc}
+1 & \mbox{ if } \eta_{i,1}(q_i) \subseteq V_h \, , \\
+0 & \mbox{ otherwise} \, ,
+\end{array}
+\right.
+\end{array}
+\end{equation*}
+and the encoder map is $\tilde{s}_i = \tilde{s}_{i,1}$ with 
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{s}_{i,1} & : & \Q \times \Q^{\hat{n}_i} \rightarrow \bool \\
+& & (q_i, I_i^h) \rightarrow \sum_{q_k \in I_i^h} {\bf 1}_{\eta_{i,1}(q_i)}(q_k) \, .
+\end{array}
+\end{equation*}
+The detection conditions are determined by the values of $\gamma_{i,j}$, $\rho_{i,j}$, $\mu_{i,j}$, and $\nu_{i,j}$, for $j=1,2$:
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{c}_i & : & \bool \times \bool \rightarrow \bool^2 \\
+& & (\hat{s}_i, v_i) \mapsto
+\left(
+\begin{array}{c}
+\neg \hat{s}_{i,1} \\ 
+\hat{s}_{i,1} v_{i,1} + \neg v_{i,1} 
+\end{array}
+\right)
+\, .
+\end{array}
+\end{equation*}
+The automaton's initial state is  $\hat{\sigma}_i^0 = \{\mbox{ACC}, \mbox{DEC}\}$ and its nondeterministic dynamics is
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{\delta_i} & : & 2^{\Sigma_i} \times 2^{E_i} \rightarrow 2^{\Sigma_i}  \\
+& & \begin{array}{l} (\mbox{ACC}, e^{i,1}), (\mbox{DEC}, e^{i,1}),  \\ (\{\mbox{ACC}, \mbox{DEC}\}, e^{i,1}) \end{array} \mapsto \mbox{ACC} \, , \\
+& & \begin{array}{l} (\mbox{ACC}, e^{i,2}), (\mbox{DEC}, e^{i,2}), \\(\{\mbox{ACC}, \mbox{DEC}\}, e^{i,2}) \end{array} \mapsto \mbox{DEC} \, , \\
+& & \begin{array}{l}(\mbox{ACC}, \{ e^{i,1}, e^{i,2}\}), \\ (\mbox{DEC}, \{ e^{i,1}, e^{i,2}\}), \\ (\{\mbox{ACC}, \mbox{DEC}\}, \{ e^{i,1}, e^{i,2}\}) \end{array} \mapsto \{ \mbox{ACC}, \mbox{DEC} \} \, , 
+\end{array}
+\end{equation*}
+and the controlled dynamic map is
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{f}^*_i & : & 2^\Q \times 2^{\Sigma_i} \rightarrow 2^{T_\mathcal{Q}} \\
+& & (\hat{q}_i, \mbox{ACC}) \mapsto \left(\hat{v}_i \cos^* \hat{\theta}_i, \, \hat{v}_i \sin^* \hat{\theta}_i, \, 0 , \, - \mu (\hat{v}_i - v_{max}) \right) \\
+& & (\hat{q}_i, \mbox{DEC}) \mapsto \left(\hat{v}_i \cos^* \hat{\theta}_i, \, \hat{v}_i \sin^* \hat{\theta}_i, \, 0 , \, - \mu \hat{v}_i \right) \, , \\
+& & (\hat{q}_i, \{\mbox{ACC}, \mbox{DEC}\}) \mapsto 
+\left( \begin{array}{c} \hat{v}_i \cos^* \hat{\theta}_i \\ \hat{v}_i \sin^* \hat{\theta}_i \\  0 \\ \{ -\mu (\hat{v}_i - v_{max}), - \mu \hat{v}_i\} \end{array} \right) \, ,
+\end{array} 
+\end{equation*}
+where $\cos^*$ and $\sin^*$ are
+\begin{equation*}
+\begin{array}{rcl}
+\cos^* & : & 2^\real \rightarrow 2^\real \\
+& & \hat{\alpha} \mapsto \{ \alpha \in \real \, | \, \exists \bar{\alpha} \in \real, \bar\alpha \subseteq \hat{\alpha} \, | \, \cos(\bar\alpha) = \alpha \} \, , \\
+\sin^* & : & 2^\real \rightarrow 2^\real \\
+& & \hat{\alpha} \mapsto \{ \alpha \in \real \, | \, \exists \bar{\alpha} \in \real, \bar\alpha \subseteq \hat{\alpha} \, | \, \sin(\bar\alpha) = \alpha \} \, .
+\end{array} 
+\end{equation*}
+
+\subsection{Dealing with Corrupted Encoders}
+
+Consider an attack undertaken by a misbehaving forklift~$\ai$ whose neighborhood $N(q_i)$ is free of other forklifts, i.e. $I_i(t) = \emptyset$ for all $t$, while the agent simulates the existence of a forklift $\aj$ s.t. $q_j(t) \in \eta_{i,1}(q_i)$ for $t \geq 2 T$. Hence, the  neighbor configuration set that $\ai$ pretends to be subject to is 
+$$
+I_i(t) = 
+\left\lbrace
+\begin{array}{lll}
+\emptyset & & t < 2 T \\
+q_j(t) & & t \geq 2 T
+\end{array}
+\right.
+\, .
+$$
+The agent's encoder map $s_i(t) = s_{i,1}(t)$ correspondingly takes the values $s_{i,1}(t) = 0$, for $t \in [0,2T)$ and $s_{i,1}(t) = 1$ for $t \geq 2T$, which implies
+$$
+e_i(t_k) = e_i(s_i(t)) = 
+\left\lbrace
+\begin{array}{ccl}
+e^{i,1} & & \mbox{if } t_k = 0, T \\
+e^{i,2} & & \mbox{if } t_k \geq  2T
+\end{array}
+\right.
+\, .
+$$
+Given the agent's initial state, $q_i(0) = (3.2, 4.1, \pi/4, v_{max})$ and $\sigma_i(0) = \macc$, its behavior is computed as follows.  The configuration's evolution is  
+$$
+\begin{array}{rcl}
+q_i(t) & = & \phi_{f_i^*}(q_i(0), \sigma_i(0)) = \\
+& = & \left( 3.2 + \frac{\sqrt{2}}{2} v_{max} \, t, 4.1 + \frac{\sqrt{2}}{2} v_{max} \, t, \pi/4, v_{max} \right) \, ,
+\end{array}
+$$
+for $t < 2 T$, since it also holds $\sigma_i(T) = \macc$. Moreover, we have $\sigma_i(2T) = \mdec$ and hence
+$$
+\begin{array}{rcl}
+q_i(t) & = & \phi_{f_i^*}(q_i(2 T), \sigma_i(2 T)) = \\
+& = & \left(3.2 + A, 4.1 + A, \pi/4, v_{max} \, e^{- \mu (t-2T)}  \right) \, ,
+\end{array}
+$$
+for $t \geq 2T$, where $A = \sqrt{2} \, v_{max} \, T + \bar\Delta(2T)$ and $\bar\Delta(t_k) = \frac{v_{max}}{\mu} \left( 1 - e^{- \mu (t-t_k)} \right)$.
+
+Consider another agent $\ah$ trying to learn whether $\ai$ is cooperative or not. Assume that $\ah$ has only partial view of the region $\eta_{i,1}(q_i)$, i.e. $q_h$ is s.t. $\eta_{i,1}(q_i) \not\subseteq \vh(q_1, \cdots, q_n)$, and thus $v_i = 0$. At $t=0$, the local monitor reads the measures, $\bar{q}_i(0) = q_i(0)$ and $I_i^h(0) = \emptyset$, and initializes the estimate of $\ai$'s states as
+$$
+\begin{array}{l}
+\hat{q}_i(0|0) = \bar{q}_i(0) = q_i(0) \, , \\
+\hat{\sigma}_i(t_{-1}|0) = \Sigma_i = \{\macc, \mdec\} \, . \\
+\end{array}
+$$
+Given that $\hat{s}_i(0|0) = 0$, the predicted behavior of the agent during the observation period $T_0$ is
+$$
+\begin{array}{rcl}
+\hat{\sigma}_i(0|0) & = & \tilde{\delta}_i(\hat{\sigma}_i(t_{-1}|0), \tilde{e}_i(\hat{s}_i(0|0), v_i(0)) = \\
+& = & \tilde{\delta}_i(\{\macc, \mdec\}, \{e^{i,1}, e^{i,2}\}) = \{\macc, \mdec\} \, ,\\
+\hat{q}_i(t|0) & = & \phi_{\tilde{f}_i^*}(\hat{q}_i(0|0), \hat{\sigma}_i(0|0)) = \{ q_i^{\macc}(t|0), q_i^{\mdec}(t|0) \} \, , 
+\end{array}
+$$
+where 
+$$
+\begin{array}{l}
+q_i^{\macc}(t|0) = \left(3.2 + \frac{\sqrt{2}}{2} \, v_{max} \, t,  4.1 + \frac{\sqrt{2}}{2} \, v_{max} \, t, \frac{\pi}{4}, v_{max} \right) \, , \\
+q_i^{\mdec}(t|0) = \left(3.2 + \bar\Delta(0),  4.1 + \bar\Delta(0), \frac{\pi}{4}, v_{max} \, e^{-\mu t} \right) \, . 
+\end{array}
+$$
+We also have $L(0) = \{\left( q_i^{\macc}(t|0), \macc \right), \left( q_i^{\mdec}(t|0), \mdec \right) \}$. At $t=T$, the monitor reads the measures $\bar{q}_i(T) = q_i(T)$ and $I_i^h(T) = \emptyset$, and the agent's predicted state can be corrected as follows:
+$$
+\begin{array}{l}
+\hat{q}_i(T|T) = \bar{q}_i(T) \, , \\
+\hat{\sigma}_i(0|T) = \pi_{\Sigma_i} \left( L(0) \bowtie_\epsilon q_i(t) \right) = \macc \, ,
+\end{array}
+$$
+which gives, along with the fact that $\hat{\sigma}_i(0|0) \bowtie_{\tilde{\delta}_i} \hat{\sigma}_i(0|T) = e^{i,1}$, the a posteriori topology activation estimate $\hat{s}_i(0|T) = 0$. The estimate of the unknown topology activation is $\hat{p}_{i,1}(\hat{s}_i(0|0), \hat{s}_i(0|T))=0$, which means the agent's behavior is cooperative if, and only if, no other forklift is present also in the portion of its neighborhood that is out of the monitor's visibility, i.e. in $\eta_{i,1}(q_i) \setminus \vh(q_1, \cdots, q_n)$. This finally gives the estimated neighbor configuration set $\hat{I}_i^h(0|T) = \emptyset$.
+
+Similar computation is performed during the observation periods $T_1$ and $T_2$, which is omitted here for space reasons. At $t=3T$, the local monitor reads the measures $\bar{q}_i(3T) = q_i(3T)$ and $I_i^h(3T) = \emptyset$, which gives the following a posteriori estimates 
+$$
+\begin{array}{l}
+\hat{q}_i(3T|3T) = \bar{q}_i(3T) \, , \;\;\; \hat{\sigma}_i(2T|3T) = \mdec \, .
+\end{array}
+$$
+Moreover, as $\hat{\sigma}_i(2T|2T) \bowtie_{\tilde{\delta}_i} \hat{\sigma}_i(2T|3T) = e^{i,2}$, we have $\hat{s}_i(2T|3T) = 1$ and $\hat{p}_{i,1}(\hat{s}_i(2T|2T), \hat{s}_i(2T|3T))=1$, which implies that the current behavior of forklift~$\ai$'s is compatible if, and only if, there is another forklift in the non--visible portion of $\eta_{i,1}(q_i)$. The estimated neighbor configuration set is indeed
+$$
+\hat{I}_i^h(2T|3T) = \eta_{i,1}(q_i) \setminus \vh(q_1, \cdots, q_n)
+\, .
+$$
+Note that an observer onboard the local monitor is unable to check if this estimated hypothesis is correct or not, which can be overcome as described in the following section.
+\\
+
+%Finally, consider the following two instants of a simulation with six cooperative forklifts. In the former, see Fig.~\ref{fig:manhattan}--a, forklifts $00$, $02$, $04$, and $05$ are running  in discrete state $\macc$ and forklift $01$ and $03$ are in discrete state $\mdec$. A local monitor onboard forklift~$00$ is trying to determine if its neighbors are cooperative or not. The monitor's decisions are the following: forklift $01$ and $02$ are $\cooperative$; forklift $03$'s behavior is possibly cooperative ($\uncertain$) and the presence of another forklift ($05$ in the figure) is inferred. 
+%%
+%\begin{figure}
+%\centering
+%\fbox{\includegraphics[width=0.46\columnwidth]{images/forklift-example_01_a.pdf}
+%} 
+%\fbox{\includegraphics[width=0.46\columnwidth]{images/forklift-example_01_b.pdf}
+%}
+%\\
+%(a)
+%\\
+%\vspace{5pt}
+%\fbox{%\includegraphics[width=0.46\columnwidth]{images/forklift-example_02_a.pdf}
+%}
+%\fbox{%\includegraphics[width=0.46\columnwidth]{images/forklift-example_02_b.pdf}
+%} \\
+%(b)
+%\caption{Simulation from the warehouse example with $5$ forklifts: the 
+%forklift $00$ is uncooperative and the other ones are trying to discover it by using their on onboard  local monitors.}
+%\label{fig:manhattan}
+%\end{figure}
+%%
+%In the latter instant, all cars are correctly running in discrete state~$\textsf{ACC}$ (Fig. \ref{fig:manhattan}--b). The figure shows that the local monitor is able to learn that forklift~$04$ and $05$ are $\cooperative$. Moreover, the behaviors of forklifts~$01$ and $02$ are still $\uncertain$, but the absence of other forklifts in the non--visible portion of $\eta_{1,1}(q_1)$ and $\eta_{2,1}(q_2)$ are correctly estimated.
+
+\subsection{Simulative Evaluation}
+
+In this section we perform a simulative evaluation of the proposed distributed IDS. To this purpose suppose that forklift $00$ incorrectly stops, thus causing a deadlock in the system. Fig.~\ref{fig:local4} shows how the local monitors on the forklifts $01$, $02$, $03$ and $04$, are able to obtain an estimate the occupancy map, that try to explain the behavior of forklift $00$. The figures report each local monitor's view, in which light gray represents region where the local monitor cannot see, green (orange) represent regions where the absence (presence) of  forklifts is required. The figures also show that all four monitors cannot successfully detect forklift $00$'s uncooperative behavior, and ``optimistically'' consider it as possibly cooperative. 
+%%
+\begin{figure*}[!]
+\centering
+$
+\begin{matrix}
+\fbox{\includegraphics[width=0.23\textwidth]{images/A01-S00140.png}}
+&
+\fbox{\includegraphics[width=0.23\textwidth]{images/A02-S00140.png}}
+&
+\fbox{\includegraphics[width=0.23\textwidth]{images/A03-S00140.png}}
+&
+\fbox{\includegraphics[width=0.23\textwidth]{images/A04-S00140.png}}
+\end{matrix}
+$
+\caption{Occupancy maps of the forklift $00$ reconstructed by the other forklifts (a blue circle indicates the subject forklift).}
+\label{fig:local4}
+\end{figure*}
+
+The performance of the proposed IDS has been evaluated through execution of a large number of simulations, in which parameters, such as the forklifts initial positions and paths, have been randomly generated. Simulations including no cell or macro--cell conflicts have been discarded. In every simulation, only one forklift was programmed to uncooperatively stop while accessing to the shared cell or macro--cell. The number of local monitors was also varied. For every simulation, we have measured if at least one local monitor has discovered the misbehavior of the uncooperative forklift (this situation is graphically represented by a red circle on the uncooperative forklift). By assuming the optimistic approach, implying that an uncertain forklift for which an explanation to its behavior still exists is considered cooperative, we have measured the percentage of false negatives. This is summarized in Table~\ref{table-performance}--a.
+%%
+\begin{table}
+\centering
+\begin{tabular}{cc}
+\begin{tabular}{|| c || c | c ||}
+\hline
+\# monitors & \# detections & \# false negatives \\
+\hline
+$2$ & $8.1$  \%	& $78.3$  \%\\
+$3$	& $13.9$  \%&	$81.2$  \%\\
+$4$	& $24.2$  \%&	$80.7$  \%\\
+$5$	& $29.9$  \%&	$75.9$  \%\\
+$6$	& $33.3$  \%&	$76.6$  \%\\
+$>6$ & $\sim 34$  \%& $\sim79$ \% \\
+\hline
+\end{tabular}
+\\
+(a)
+\\
+\\
+\begin{tabular}{|| c || c | c ||}
+\hline
+\# monitors & \# detections & \# false negatives \\
+\hline
+$2$ & $23.2$  \%	& $66.7$  \%\\
+$3$	& $48.7$  \% &	$38.6$  \%\\
+$4$	& $66.7$  \%&	$17.7$  \%\\
+$5$	& $75.8$  \%&	$14.8$  \%\\
+$6$	& $89.3$  \%&	$12.5$  \%\\
+$>6$ & $\sim 93$ \% & $\sim 7$  \%\\
+\hline
+\end{tabular}
+\\
+(b) 
+\end{tabular}
+\caption{Effectiveness and reliability of the proposed motion misbehavior detection system without communication (a) and with communication (b).}
+\label{table-performance}
+\end{table}
+%%
+The table shows that the number of local monitors affects the effectiveness and reliability of the detection system only for small numbers ($<6$). For larger numbers of local monitors, the monitors themselves are even unable to see the misbehavior forklift, which is hided by some other forklifts, and thus cannot effectively participate in the detection. It is also apparent that, without monitor communication, the IDS is ineffective.
+
+%\subsection{Improvement of detection capability through communication}
+
+We finally show how and in what amount the ability of the detection system is improved by means of communication. Before doing this, we show how local monitors can capitalize on the possibility to share locally estimated occupancy maps by using the proposed {\em set--valued consensus}. Referring to the example above, Fig.~\ref{fig:cons4}, one for each local monitor, show how the occupancy maps are iteratively improved, which finally allows to detect the presence of the uncooperative forklift. In each figure, the first picture on the left represents the estimation that the local monitor has computed based on only locally available information, and the $k$--th picture (with $k>1$) shows how the same occupancy map is improved after $k$ steps of the consensus algorithm. By comparing the last picture on the right of the four figures, it is possible to show that all local monitors consent on the absence of an forklift in the neighborhood of forklift $00$, which can be consequently categorized as uncooperative.
+%%
+\begin{figure*}
+\centering
+$
+\begin{matrix} (k=0) & (k=1) & (k=2) & (k=3) 
+\\
+\fbox{\includegraphics[width=0.23\textwidth]{images/C00107-A01-T00-CS00-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A01-T00-CS01-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A01-T00-CS02.png}} & 
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A01-T00-CS03.png}} 
+\\
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A02-T00-CS00-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A02-T00-CS01-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A02-T00-CS02.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A02-T00-CS03.png}} 
+\\
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A03-T00-CS00-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A03-T00-CS01-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A03-T00-CS02-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A03-T00-CS03.png}} 
+\\
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A04-T00-CS00-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A04-T00-CS01-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A04-T00-CS02-b.png}} &
+\fbox{\includegraphics[width=0.23\textwidth,clip]{images/C00107-A04-T00-CS03.png}} 
+\end{matrix}
+$
+\caption{Consensus run of the local monitors: forklift $01$ communicates with forklift $02$ and forklift $03$, forklift $02$ communicates with forklift $01$ and forklift $04$, forklift $03$ communicates with forklift $01$, forklift $04$ communicates with forklift $02$.}
+\label{fig:cons4}
+\end{figure*}
+
+Table~\ref{table-performance}--b reports the performance evaluation of the proposed motion misbehavior detection system while monitor communication is active. The same simulations that were selected for the evaluation of the previous section were considered. By comparing these results with the ones described in the previous section (with no monitor communication), we can see that the detection capability of the system is much further improved.
+
+\subsection{Experiments in a Real Industrial Plant}
+
+To prove the effectiveness of the proposed cooperation model and of the IDS, the following experiment has been done. Three forklifts are supposed to follow the cooperation rules described above. They start from cells adjacent to three different stretch--wrappers and reach final positions at the three storing locations. Their paths share a number of cells, which requires that the forklifts negotiate their access to prevent collisions. The video attached to the paper shows in the first part how a simple stopping failure of one of the forklifts can cause deadlock, if the IDS is inactive. In the second part of the video, the remaining two correct forklifts can cooperatively detect the noncooperation of the faulty one by using the proposed IDS, and can thus solve the deadlock. After consenting on the third robot's noncooperation, the other two forklifts temporarily exclude it from the cell negotiation and proceed further in their paths. In the last part of the video, the faulty robot is restored, the other two forklifts realize of it, and thus they can readmit it to the cell cooperation. By using the proposed IDS, the three forklifts are indeed able to conclude their paths. Fig~\ref{fig:viano} reports some snapshots from the experiment.
+%
+\begin{figure*}[!]
+\centering
+\begin{tabular}{ccc}
+\includegraphics[width=0.48\textwidth,clip]{images/viano11.png} &
+\includegraphics[width=0.48\textwidth,clip]{images/viano21.png} \\
+\includegraphics[width=0.48\textwidth,clip]{images/viano31.png} &
+\includegraphics[width=0.48\textwidth,clip]{images/viano41.png} 
+%%% LE FIGURE GRANDI
+%\includegraphics[width=0.48\textwidth,clip]{images/viano1.png} &
+%\includegraphics[width=0.48\textwidth,clip]{images/viano2.png} \\
+%\includegraphics[width=0.48\textwidth,clip]{images/viano3.png} &
+%\includegraphics[width=0.48\textwidth,clip]{images/viano4.png} 
+\end{tabular}
+\caption{Real experiments with $3$ forklifts running a cooperative motion protocol to avoid collisions and the proposed intrusion detection system to avoid deadlocks. Experiments have been performed at the premises of Elettric80 S.p.A.}
+\label{fig:viano}
+\end{figure*}
+
+%%%%%%%
+%%%% NON PUBBLICATO
+%%%%%
+%%%%% NON CANCELLARE
+%%%%%
+
+%
+%\subsection{A Second Threat: Corrupted Decoder}
+%
+%Consider an attack undertaken by means of alteration of the decoder map $u_i$ of an agent~$\ai$ described by a map of the following class:
+%\begin{equation*}
+%\begin{array}{rcl}
+%u_i^\alpha  & : & \Q \times \Sigma_i \rightarrow \mathcal{U}_i \\
+%& & (q_i, \mbox{ACC}) \mapsto 
+%\left( - \mu (1-\alpha) (v_i - v_{max}), 0 \right)^T \, , \\
+%& & (q_i, \mbox{DEC}) \mapsto 
+%\left( - \mu \, v_i, 0 \right)^T \, ,
+%\end{array}
+%\end{equation*}
+%where $\alpha \in [0, 1]$ is a fixed parameter. Alteration of the decoder map involves the agent's behavior only when the discrete state $\macc$ is active. In particular, note that, for $\alpha \rightarrow 0$, the agent's ``deviance'' is almost negligible if $\alpha \rightarrow 0$ and may cause no damage to the system, whereas the case with $\alpha \rightarrow 1$ represents a more subtle type of attack, where the agent pretends to simulate the existence of another agent in $\eta_{i,1}(q_i)$ (the deviated motion is similar to that of a correct agent whose discrete state is $\mdec$). The corresponding misbehavior model only differs from the nominal behavior in the controlled dynamic map
+%$$
+%\dot{q}_i(t) = f_i(q_i(t), u_i^\alpha(q_i(t), \sigma_i(t_k))) = F^\alpha_i(q_i(t), \sigma_i(t_k)) \, ,
+%$$
+%whose solution, $\phi_{F^\alpha_i}(q_i(t_k), \sigma_i(t_k))$, is immediately obtained by replacing $\mu$ with $\mu (1-\alpha)$ in Eq.~\ref{eq:example:solution} in the terms involving the state $\macc$, i.e., 
+%$$
+%\begin{array}{c}
+%\Delta(\macc, t) = v_{max} \left( t - t_k \right) + \frac{v_i(t_k)-v_{max}}{\mu (1-\alpha)} \left( 1-e^{-\mu (1-\alpha) (t-t_k)} \right) \, , \\
+%V(\macc, t) = v_{max} \left( 1-e^{-\mu (1-\alpha) (t-t_k)} \right) \, .
+%\end{array}
+%$$
+%
+%A suitable value for the monitor's accuracy $\epsilon$ can be computed based on the above misbehavior model, by guaranteeing that every deviated behavior is larger than the monitor's accuracy itself, i.e.,
+%$$
+%|| \phi_{f_i^*}(q_i(t_k), \sigma) - \phi_{F^\alpha_i}(q_i(t_k), \sigma) || > \epsilon \, , \; \forall \, \sigma \in \Sigma_i \, .
+%$$
+%By assuming $\mu T$ small, this gives the conditions
+%$$
+%\begin{array}{rcl}
+%\epsilon & \leq & || \phi_{f_i^*}(q_i(t_k), \mbox{ACC}) - \phi_{F^\alpha_i}(q_i(t_k), \mbox{ACC}) || \simeq \\
+%& \simeq & \mu \, | v_i(t_k) - v_{max} | \, T \, \alpha \, , \\
+%\epsilon & \leq & || \phi_{f_i^*}(q_i(t_k), \mbox{DEC}) - \phi_{F^\alpha_i}(q_i(t_k), \mbox{ACC}) || \simeq \\
+%& \simeq & - \mu \, | v_i(t_k) - v_{max} | \, T \, \alpha + \mu T v_{max}
+%\end{array}
+%$$
+%where the first--order Taylor series expansion of the exponential function, $e^x \simeq 1+x$, was used. Finally, the monitor's accuracy must be greater than the minimum measurement precision $\epsilon_{min}^h$ of its onboard sensory system, i.e., $\epsilon \geq \epsilon^h_{min}$.
+
+%
+%
+%
+
+\AFnewpage
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+The problem of detecting misbehaving robots in a decentralized setting
+was addressed in this work. Robots are supposed to interact with each
+other based on ``rules'' that depend on the status of their neighborhoods. The literature on DES for fault diagnosability and state observability (see e.g.~\cite{ramadge1989cde, balluchi2002doh, zad2003fdd}) addresses similar problems, but those solutions are not applicable mainly because the interaction topology in our systems is time--varying and unknown. Furthermore, the fault diagnosis approaches based on excitation of the model and observation of the error between expected and actual outputs~\cite{monteriu2007mbs} could be possible, but their would require changing the cooperation rules. The proposed solution is a distributed IDS where every agent first runs a local monitor to obtain a subjective map of free and occupied regions and then a consensus algorithm to agree on a unique shared map. We assumed that the information exchanged is always correct. Future extension of the work will address the important generalization to the case where robots can send false information due to communication failure or tampering. Preliminary but promising results toward this direction are reported in~\cite{ssrr08-fagiolini}.
+
+\section*{Acknowledgment}
+
+The authors wish to thank Elettric80 S.p.A. for providing their forklifts, Marco Casarini and Massimiliano Magnani for their knowledge and expertise, Simone Martini, Davide Di Baccio, Ida M. Savino, and Leonardo Rocchi for their fruitful work on the experimental setup. %This work has been partially supported by the European Commission with contract number FP7-2007-2-224053 CONET, the ``Cooperating Objects Network of Excellence'', with contract number FP7-2010-257649 PLANET, ``PLAtform for the deployment and operation of heterogeneous NETworked cooperating objects'', and with contract number FP7-2010-257462 HYCON2, ``Highly-complex and networked control systems''.
+
+\input{the-appendix}
+
+\bibliography{AF-biblio}
+
+\input{the-biography}
+
+\end{document}

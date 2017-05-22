@@ -1,0 +1,165 @@
+
+%!TEX root = tro-ids.tex
+
+\appendix
+
+\subsection{Event Estimation with Incomplete, Time--Varying Visibility}
+\label{sec:proofs}
+
+A proof of the formula used for the observer's detector map of Eq.~\ref{eq:monitor:detector-map} is given in this section. This result, along with the procedure presented in Section~\ref{sec:monitor} for the construction of the nondeterministic automaton $\tilde{\delta}_i$ extends available solutions (see e.g.~\cite{cassandras}) in sofar as that it shows that an observer for discrete event systems with uncertain events can be efficiently estimated also with incomplete, time--varying visibility. 
+
+First consider the following propositions:
+\begin{proposition}
+\label{prop:or-atom}
+The smallest upper approximation of a detector condition $c_{i,j}=s_{i,k}$ ($\gamma_{i,j}=\{k\}, \rho_{i,j}=\mu_{i,j}=\pi_{i,j}=\emptyset$), based on an observer's topology check~$v_h$ and an available encoder map $\shone$, is
+$$
+\tilde{c}_{i,j} =  \shone \, v_{h,k} + \neg v_{h,k} \, .
+$$
+\begin{proof}
+Based on the observer's visibility region $V_h$, the encoder map $s_{i,k}$ can be written as 
+\begin{equation*}
+\begin{array}{rcl}
+s_{i,k}(q_i, I_i)
+% & = & \sum_{q_k \in I_i} {\bf 1}_{\eta_{i,k}(q_i)}(q_k) = \\
+& = & \tilde{s}_{i,k}(q_i, I_i^h) + \sum_{q_k \in I_i \setminus V_h} {\bf 1}_{\eta_{i,k}(q_i)}(q_k) = \\
+& = & \tilde{s}_{i,k}(q_i, I_i^h) + \nshone(q_i, I_i) \, ,
+\end{array}
+\end{equation*}
+that can be conveniently factorized as follows. If $\nshone = 0$, the expression reduces to $c_{i,j} = \shone$, whereas if $\nshone = 1$, it becomes $c_{i,j} = \shone + 1 = 1$. Then, the detector condition can be factorized as $c_{i,j} = \shone \, \neg \nshone + 1 \, \nshone$. Moreover, if the observer has complete visibility of the $k$--th topology ($v_{i,k}=1$), $\nshone = 0$ since $I_i \setminus V_h = \emptyset$, which implies $c_{i,j} = \shone$, whereas nothing can be said on the value of $\nshone$ if $v_{i,k}=0$. Therefore, $c_{i,j}$ can be factorized w.r.t. the observer's topology check as
+\begin{equation*}
+c_{i,j} = \shone \, v_{i,k} + \left( \shone \, \neg \nshone + \nshone \right) \neg v_{i,k} \, .
+\end{equation*}
+Its visibility--based smallest upper approximation is
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{c}_{i,j} & = & \max_{\nshone \in \bool} c_{i,j} = \shone \, v_{i,k} + A \, \neg v_{i,k} \, , \\
+\end{array}
+\end{equation*}
+with $A=\max_{\nshone \in \bool} \left( \shone \, \neg \, \nshone + \nshone\right) = \max \left\lbrace \shone, 1 \right\rbrace = 1$, which proves the thesis.
+\end{proof}
+\end{proposition}
+
+\begin{proposition}
+\label{prop:nor-atom}
+The smallest upper approximation of a detector condition $c_{i,j}=\neg s_{i,k}$ ($\gamma_{i,j}=\emptyset, \rho_{i,j}=\{k\}, \mu_{i,j}=\pi_{i,j}=\emptyset$), based on an observer's topology check~$v_h$ and an available encoder map $\shone$, is
+$$
+\tilde{c}_{i,j} =  \neg \shone \, .
+$$
+\begin{proof}
+As in Prop. \ref{prop:or-atom}, based on the observer's visibility region $V_h$, the detector condition $c_{i,j}$ can be written as  
+\begin{equation*}
+\begin{array}{rcl}
+\neg s_{i,k}(q_i, I_i) & = & \neg \left( \tilde{s}_{i,k}(q_i, I_i^h) + \nshone(q_i, I_i) \right) = \\
+& = & \neg \tilde{s}_{i,k}(q_i, I_i^h) \, \neg \nshone(q_i, I_i) \, ,
+\end{array}
+\end{equation*}
+where De Morgan's law is used. If $\nshone = 0$, the expression reduces to $c_{i,j} = \neg \shone$, whereas if $\nshone = 1$, it becomes $c_{i,j} = 0$. Then, $c_{i,j}$ can be factorized as $c_{i,j} = \neg \shone \, \neg \nshone + 0 \, \nshone = \neg \shone \, \neg \nshone$. Moreover, if $v_{i,k}=1$, $\nshone = 0$ that implies $c_{i,j} = \neg \shone$, whereas nothing can be said on its value otherwise. Therefore, $c_{i,j}$ can be factorized w.r.t. the observer's topology check as
+\begin{equation*}
+c_{i,j} = \neg \shone \, v_{i,k} + \neg \shone \, \neg \nshone \, \neg v_{i,k}
+\end{equation*}
+Its visibility--based smallest upper approximation is
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{c}_{i,j} & = & \neg \shone \, v_{i,k} + \neg \shone \max_{\nshone \in \bool} \left( \nshone \right) \, \neg v_{i,k} = \\
+& = & \neg \shone \, v_{i,k} + \neg \shone \, \neg v_{i,k} = \\
+& = & \neg \shone \, (v_{i,k} + \neg v_{i,k}) = \neg \shone \, ,
+\end{array}
+\end{equation*}
+which gives the thesis.
+\end{proof}
+\end{proposition}
+
+\begin{proposition}
+\label{prop:mixed-atom}
+The smallest upper approximation of a detector condition $c_{i,j}=s_{i,k} \, \neg s_{i,m}$ ($\gamma_{i,j}=\{k\}, \rho_{i,j}=\{m\}, \mu_{i,j}=\pi_{i,j}=\emptyset$), based on an observer's topology check $v_h$, is
+$$
+\tilde{c}_{i,j} = \left(  \shone \, v_{h,k} + \neg v_{h,k} \right) \, \neg \shtwo \, .
+$$
+\begin{proof}
+Based on the observer's visibility region $V_h$, the detector condition can be written as 
+\begin{equation*}
+\begin{array}{rcl}
+c_{i,j} & = & (\shone + \nshone) \, (\neg \shtwo \, \neg \nshtwo) = \\
+& = & \shone \neg \shtwo \neg \nshtwo + \nshone \, \neg \shtwo \neg \nshtwo \, . 
+\end{array}
+\end{equation*}
+By enumerating all possible combinations of $\nshone$ and $\nshtwo$, $c_{i,j}$ can be factorized as
+\begin{equation*}
+c_{i,j} = \left( \neg \shtwo \right) \, \nshone \, \neg \nshtwo + \left(\shone \, \neg  \shtwo \right) \, \neg \, \nshone \neg  \nshtwo \, .
+\end{equation*}
+Moreover, based on the observer's topology check (recall that $v_{i,k}=1$ implies $\nshone=0$, and $v_{i,m}=1$ implies $\nshtwo=0$), the expression can be further factorized as
+\begin{equation*}
+\begin{array}{rcl}
+c_{i,j} & = & A \, v_{i,k} \, v_{i,m} + B \, v_{i,k} \, v_{i,m} + \\
+& + & C \, \neg v_{i,k} \, v_{i,m} + D \, \neg v_{i,k} \, \neg v_{i,m} \, ,
+\end{array}
+\end{equation*}
+with $A=\shone \, \neg \shtwo$, $B=\shone \, \neg \shtwo \, \neg\nshtwo$, $C=\neg \shtwo \, \nshone + (\shone \, \neg \shtwo) \, \neg \nshone$, and $D=\neg \shtwo \, \nshone \, \neg \nshtwo + \shone \, \neg \shtwo \neg \nshone \neg \nshtwo$. Its visibility--based smallest upper approximation is
+\begin{equation*}
+\begin{array}{rcl}
+\tilde{c}_{i,j} & = & \shone \, \neg \shtwo \left( v_{i,k} \, v_{i,m} + v_{i,k} \, \neg v_{i,m} \right) + \\
+& + & \neg \shtwo \left( \neg v_{i,k} \, v_{i,m} + \neg v_{i,k} \, \neg v_{i,m} \right) = \\
+& = & \shone \, \neg \shtwo \, v_{i,k}  + \neg \shtwo \neg v_{i,k} \, ,
+\end{array}
+\end{equation*}
+which easily gives the thesis.
+\end{proof}
+\end{proposition}
+
+We can now readily give a proof of Theorem~\ref{th:smallest-estimator} as follows. W.r.t. the above propositions, an event estimator map $e_i$ with detector conditions of the form of Eq.~\ref{eq:detector-map} is characterized by a generic combination of the sets $\gamma_{i,j}, \rho_{i,j} \in \{1, \cdots, \kappa_i\}$ and $\mu_{i,j}, \pi_{i,j} \in \{1, \cdots, h_i\}$. It is sufficient to show that the above propositions also extend to the general case. 
+\begin{proof}{\em (of Theorem~\ref{th:smallest-estimator})}
+Let us proceed by induction. Consider the case with only $\gamma_{i,j} \neq \emptyset$ and $\textrm{card}(\gamma_{i,j}) \geq 1$. Assume $\gamma_{i,j}=\{1, \cdots, l\}$, which is always possible upon reordering of the encoder map's components. The case with $l=1$ is proved by Prop.~\ref{prop:or-atom}. By assuming that the thesis holds for $l=m$, i.e., that the smallest upper approximation of $c_{i,j} = \Pi_{k \in \gamma_{i,j}} s_{i,k} = \Pi_{k=1}^{m} s_{i,k}$ is $\tilde{c}_{i,j} = \left( \Pi_{k=1}^{m} \, \shone \, v_{i,k} + \neg v_{i,k} \right)$, the inductive step requires proving it for $l=m+1$. Indeed, the detector condition $c_{i,j}=\Pi_{k=1}^{m+1} s_{i,k}$ can be written as 
+\begin{equation*}
+\begin{array}{rcl}
+\underbrace{\left( \Pi_{m=1}^k s_{i,k} \right)}_{z} \, s_{i,m+1} = z \, s_{i,m+1} = z \, \left(\tilde{s}_{i,m+1} + \tilde{p}_{i,m+1} \right) \, ,
+\end{array}
+\end{equation*}
+that can be factorized as follows. If $\tilde{p}_{i,m+1} = 0$, the expression reduces to $c_{i,j} = z \, \tilde{s}_{i,m+1}$, whereas if $\tilde{p}_{i,m+1} = 1$, it becomes $c_{i,j} = z$, thus giving the expression
+\begin{equation*}
+c_{i,j} =  z \, \tilde{s}_{i,m+1} \, \neg \tilde{p}_{i,m+1} + z \, \tilde{p}_{i,m+1} \, .
+\end{equation*}
+The detector condition can be factorized w.r.t. the observer's topology check $v_{i,m+1}$ as follows. If $v_{i,m+1} = 1$, we have $\tilde{p}_{i,m+1} = 0$ and $c_{i,j} = z \, \tilde{s}_{i,m+1}$, whereas if $v_{i,m+1} = 0$ nothing can be said on its value. This yields
+\begin{equation*}
+c_{i,j} = z \, A \, v_{i,m+1} + z \, B \, \neg v_{i,m+1} \, ,
+\end{equation*}
+with $A =  \tilde{s}_{i,m+1}$, and $B = \tilde{s}_{i,m+1} \, \neg \, \tilde{p}_{i,m+1} + \tilde{p}_{i,m+1}$. Its visibility--based, smallest upper approximation is
+\begin{equation*}
+\begin{array}{c}
+\tilde{c}_{i,j} = \max_{\tilde{p}_{i,1}, \cdots, \tilde{p}_{i,m+1} \in \bool} c_{i,j} =\\
+= \max_{\tilde{p}_{i,1}, \cdots, \tilde{p}_{i,m}} z \, \cdot \, \max_{\tilde{p}_{i,m+1}} \left( A \, v_{i,m+1} + B \, \neg v_{i,m+1} \right) = \\
+= \left( \Pi_{k=1}^{m} \, \shone \, v_{i,k} + \neg v_{i,k} \right) \, \left( \tilde{s}_{i,m+1} v_{i,m+1} + \neg v_{i,m+1} \right) ,
+\end{array}
+\end{equation*}
+which proves the thesis in the first considered case.
+
+Consider the case with only $\rho_{i,j} \neq \emptyset$, $\rho_{i,j}=\{1, \cdots, l\}$. As above, we want to proceed by induction. The case with $l=1$ is proved by Prop.~\ref{prop:nor-atom}. By assuming that the thesis holds for $l=m$, i.e., that the smallest upper approximation of $c_{i,j} = \Pi_{k \in \rho_{i,j}} \neg s_{i,k} = \Pi_{k=1}^{m} \neg s_{i,k}$ is $\tilde{c}_{i,j} = \Pi_{k=1}^{m} \, \neg \shone$, the inductive step requires proving it for $l=m+1$. Indeed, the detector condition 
+$$
+c_{i,j}=\Pi_{k=1}^{m+1} \neg s_{i,k} = z \, \neg \tilde{s}_{i,m+1} \, \neg \tilde{p}_{i,m+1}
+$$
+can be factorized as follows. If $\tilde{p}_{i,m+1} = 0$, the expression reduces to $c_{i,j} = z \, \neg \tilde{s}_{i,m+1}$, whereas, if $\tilde{p}_{i,m+1} = 1$, it becomes $c_{i,j}=0$, thus giving the expression
+\begin{equation*}
+c_{i,j} = z \, \neg \tilde{s}_{i,m+1} \, \neg \tilde{p}_{i,m+1} \, .
+\end{equation*}
+The detector condition can be factorized w.r.t. the observer's topology check $v_{i,m+1}$ as follows. If $v_{i,m+1} = 1$, we have $\tilde{p}_{i,m+1} = 0$ and $c_{i,j} = z \, \neg \tilde{s}_{i,m+1}$, whereas if $v_{i,m+1} = 0$ nothing can be said on its value. This yields
+\begin{equation*}
+\begin{array}{rcl}
+c_{i,j} & = & z \, \neg \tilde{s}_{i,m+1} \, v_{i,m+1} + z \, \neg \tilde{s}_{i,m+1} \, \neg \tilde{p}_{i,m+1} \, \neg v_{i,m+1} = \\
+& = & z \, \neg \tilde{s}_{i,m+1} \left( v_{i,m+1} + \neg \tilde{p}_{i,m+1} \, \neg v_{i,m+1} \right)
+ \, .
+ \end{array}
+\end{equation*}
+Its visibility--based, smallest upper approximation is ${\tilde{c}_{i,j} = \left( \Pi_{k=1}^m \neg s_{i,k} %\Pi_{k=1}^{m} \, \shone \, v_{i,k} + \neg v_{i,k} 
+\right) \neg \tilde{s}_{i,m+1} \, C}$, with 
+$$
+\begin{array}{rcl}
+C & = & \max_{\tilde{p}_{i,m+1}} \left( v_{i,m+1} + \neg \tilde{p}_{i,m+1} \, \neg v_{i,m+1} \right) = \\
+& = & \max \{v_{i,m+1}, 1\} = 1 \, ,
+\end{array}
+$$
+which proves the thesis also in this second case.
+
+The cases with $\gamma_{i,j}, \rho_{i,j} \neq \emptyset$ and their cardinality greater than the unity straightforwardly follow from the discussion above and recursive application of Prop.~\ref{prop:mixed-atom}. Finally, the estimated value of every application $\lambda_{i,k}$, affecting $c_{i,j}$ if $\mu_{i,j}, \tau_{i,j} \neq \emptyset$, coincides with its real value as they only depend on the configuration $q_i$ of the monitored agent~$\ai$, that is measurable from $\ah$ by assumption.
+\end{proof}
+
+\AFnewpage
+
